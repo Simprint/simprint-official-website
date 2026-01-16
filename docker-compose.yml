@@ -9,6 +9,10 @@ services:
       - "80:80"
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./download.html:/usr/share/nginx/html/download.html:ro
+      - ./docs.html:/usr/share/nginx/html/docs.html:ro
+      - ./favicon.ico:/usr/share/nginx/html/favicon.ico:ro
+      - ./logo.png:/usr/share/nginx/html/logo.png:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]

@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simprint — Anti-Detect Browser for Multi-Account Management</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --bg: #050505;
-            --rail: #161617;
-            --rail-active: #2A2A2B;
+            --rail: #2a2a2b;
+            --rail-active: #404040;
             --accent: #0055FF;
             --text-main: #E5E5E5;
-            --text-muted: #737373;
+            --text-muted: #a3a3a3;
         }
 
         body {
@@ -24,6 +26,120 @@
             -webkit-font-smoothing: antialiased;
             letter-spacing: -0.01em;
             overflow-x: hidden;
+        }
+
+        /* --- 动态模糊光效系统 --- */
+        .glow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            mix-blend-mode: screen;
+        }
+        
+        /* 主光球 - 蓝色 (右上) */
+        .glow-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.6) 0%, rgba(0, 85, 255, 0) 70%);
+            top: -200px;
+            right: -100px;
+            animation: floatOrb1 20s ease-in-out infinite;
+        }
+        
+        /* 蓝色光球 (左下) */
+        .glow-orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.6) 0%, rgba(0, 85, 255, 0) 70%);
+            bottom: -200px;
+            left: -100px;
+            animation: floatOrb2 22s ease-in-out infinite;
+        }
+        
+        /* 第三光球 - 青色 */
+        .glow-orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.4) 0%, rgba(0, 200, 255, 0) 70%);
+            top: 50%;
+            right: 10%;
+            animation: floatOrb3 18s ease-in-out infinite;
+        }
+        
+        /* 第四光球 - 蓝紫渐变 */
+        .glow-orb-4 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(60, 60, 255, 0.5) 0%, rgba(100, 0, 200, 0) 70%);
+            bottom: 10%;
+            right: 30%;
+            animation: floatOrb4 22s ease-in-out infinite;
+        }
+        
+        @keyframes floatOrb1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-50px, 100px) scale(1.1); }
+            50% { transform: translate(-100px, 50px) scale(0.9); }
+            75% { transform: translate(-30px, 150px) scale(1.05); }
+        }
+        
+        @keyframes floatOrb2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -100px) scale(1.1); }
+            50% { transform: translate(100px, -50px) scale(0.9); }
+            75% { transform: translate(30px, -150px) scale(1.05); }
+        }
+        
+        @keyframes floatOrb3 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(-80px, -50px) scale(1.2); opacity: 0.6; }
+        }
+        
+        @keyframes floatOrb4 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            40% { transform: translate(60px, -80px) scale(1.1); }
+            80% { transform: translate(-40px, -40px) scale(0.9); }
+        }
+        
+        /* 鼠标跟随光效（通过 JS 控制） */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(40px);
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .cursor-glow.active {
+            opacity: 1;
+        }
+        
+        /* 语言切换下拉菜单 */
+        #langDropdown.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lang-option.active .lang-check {
+            opacity: 1;
         }
 
         /* --- 增强版交叉线条系统 --- */
@@ -76,24 +192,56 @@
         /* 修复后的 Request Access 按钮 */
         .btn-primary {
             background-color: #FFFFFF;
-            color: #000000 !important; /* 强制初始为黑色文本 */
+            color: #000000 !important;
             border: none;
+            overflow: hidden;
+            position: relative;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,85,255,0.2), transparent);
+            transition: left 0.5s ease;
         }
         .btn-primary:hover {
             background-color: #f0f0f0;
-            color: #000000 !important; /* 悬停时依然保持黑色，避免背景亮白时看不清 */
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+            color: #000000 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-secondary {
             background-color: transparent;
             color: #FFFFFF;
             border: 1px solid var(--rail-active);
+            overflow: hidden;
+            position: relative;
+        }
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255,255,255,0.05);
+            transition: width 0.3s ease;
+            z-index: -1;
         }
         .btn-secondary:hover {
-            border-color: var(--text-muted);
-            background-color: rgba(255,255,255,0.03);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .btn-secondary:hover::before {
+            width: 100%;
         }
 
         /* 动画 */
@@ -103,112 +251,6 @@
             transition: all 600ms cubic-bezier(0.2, 0, 0, 1);
         }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* --- 渲染时自动触发的悬浮效果 --- */
-        
-        /* 发光边框动画 */
-        @keyframes borderGlow {
-            0%, 100% { border-color: var(--rail); box-shadow: none; }
-            50% { border-color: var(--accent); box-shadow: 0 0 20px rgba(0, 85, 255, 0.3); }
-        }
-        
-        /* 扫光效果 */
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        
-        /* 轻微浮动效果 */
-        @keyframes floatUp {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
-        }
-        
-        /* 脉冲发光效果 */
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-        
-        /* 带自动悬浮效果的卡片 */
-        .auto-hover {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* 扫光层 */
-        .auto-hover::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(0, 85, 255, 0.08) 50%,
-                transparent 100%
-            );
-            background-size: 200% 100%;
-            opacity: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-        
-        /* 触发动画状态 */
-        .auto-hover.animate-entry {
-            animation: borderGlow 1.5s ease-out, floatUp 1.2s ease-out;
-        }
-        
-        .auto-hover.animate-entry::before {
-            opacity: 1;
-            animation: shimmer 1.5s ease-out;
-        }
-        
-        /* 角落发光点 */
-        .glow-dot {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 10;
-            pointer-events: none;
-            box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
-        }
-        
-        .glow-dot.animate {
-            animation: pulseGlow 1s ease-out;
-        }
-        
-        .glow-dot.top-left { top: -3px; left: -3px; }
-        .glow-dot.top-right { top: -3px; right: -3px; }
-        .glow-dot.bottom-left { bottom: -3px; left: -3px; }
-        .glow-dot.bottom-right { bottom: -3px; right: -3px; }
-        
-        /* 数据面板特殊效果 */
-        .data-panel.animate-entry .stat-value {
-            animation: countUp 0.8s ease-out;
-        }
-        
-        @keyframes countUp {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* 按钮入场闪烁 */
-        .btn-system.animate-entry {
-            animation: buttonFlash 0.8s ease-out;
-        }
-        
-        @keyframes buttonFlash {
-            0% { box-shadow: none; }
-            30% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.4); }
-            100% { box-shadow: none; }
-        }
 
         .container-main {
             max-width: 1400px;
@@ -227,7 +269,7 @@
             color: var(--rail-active);
             z-index: 15;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.8;
         }
         .section-number.left {
             left: 2rem;
@@ -297,11 +339,12 @@
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             border: 1px solid var(--rail);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .hero-images .stack-card img {
             width: 100%;
             display: block;
+            transition: transform 0.5s ease;
         }
         .hero-images .stack-card:nth-child(1) {
             top: 0;
@@ -322,16 +365,26 @@
             transform: rotate(2deg) translateX(10px);
         }
         .hero-images:hover .stack-card:nth-child(1) {
-            transform: rotate(-6deg) translateX(-40px) translateY(-10px);
+            transform: rotate(-6deg) translateX(-50px) translateY(-15px);
+            box-shadow: 0 30px 60px -15px rgba(0, 85, 255, 0.15);
+        }
+        .hero-images:hover .stack-card:nth-child(2) {
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9);
+            border-color: var(--accent);
+        }
+        .hero-images:hover .stack-card:nth-child(2) img {
+            transform: scale(1.02);
         }
         .hero-images:hover .stack-card:nth-child(3) {
-            transform: rotate(5deg) translateX(30px) translateY(10px);
+            transform: rotate(5deg) translateX(40px) translateY(15px);
+            box-shadow: 0 30px 60px -15px rgba(0, 85, 255, 0.15);
         }
 
         /* 技术卡片样式 */
         .tech-card {
             position: relative;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .tech-card .bg-icon {
             position: absolute;
@@ -341,10 +394,170 @@
             height: 140px;
             opacity: 0.06;
             pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* 技术卡片悬停效果 */
+        .tech-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px -15px rgba(0, 85, 255, 0.25),
+                        0 0 0 1px rgba(0, 85, 255, 0.1);
+            background-color: #0c0c0c;
+        }
+        .tech-card:hover .bg-icon {
+            opacity: 0.12;
+            transform: scale(1.1) rotate(5deg);
+        }
+        .tech-card:hover i:first-of-type {
+            transform: scale(1.2);
+        }
+        .tech-card i:first-of-type {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* 用例卡片悬停效果增强 */
+        .use-case-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .use-case-card:hover {
+            transform: translateX(8px);
+            border-color: var(--accent);
+            box-shadow: -4px 0 20px -5px rgba(0, 85, 255, 0.3);
+            background-color: #080808;
+        }
+        .use-case-card:hover .block-marker {
+            opacity: 1 !important;
+            height: 100%;
+            top: 0;
+            transform: translateY(0);
+        }
+        .use-case-card .block-marker {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 20px;
+        }
+        
+        /* 数据面板悬停效果 */
+        .data-panel {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .data-panel:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 85, 255, 0.2);
+            border-color: rgba(0, 85, 255, 0.3);
+        }
+        .data-panel:hover .corner-accent {
+            width: 12px;
+            height: 12px;
+        }
+        .data-panel .corner-accent {
+            transition: all 0.3s ease;
+        }
+        
+        /* 统计数字悬停效果 */
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+        .stat-item:hover .stat-value {
+            color: var(--accent);
+            transform: scale(1.05);
+        }
+        .stat-value {
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        /* --- 首次加载自动播放悬停效果 --- */
+        
+        /* 技术卡片自动悬停 */
+        .tech-card.auto-hover-active {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px -15px rgba(0, 85, 255, 0.25),
+                        0 0 0 1px rgba(0, 85, 255, 0.1);
+            background-color: #0c0c0c;
+        }
+        .tech-card.auto-hover-active .bg-icon {
+            opacity: 0.12;
+            transform: scale(1.1) rotate(5deg);
+        }
+        .tech-card.auto-hover-active i:first-of-type {
+            transform: scale(1.2);
+        }
+        
+        /* 用例卡片自动悬停 */
+        .use-case-card.auto-hover-active {
+            transform: translateX(8px);
+            border-color: var(--accent);
+            box-shadow: -4px 0 20px -5px rgba(0, 85, 255, 0.3);
+            background-color: #080808;
+        }
+        .use-case-card.auto-hover-active .block-marker {
+            opacity: 1 !important;
+            height: 100%;
+            top: 0;
+            transform: translateY(0);
+        }
+        
+        /* 数据面板自动悬停 */
+        .data-panel.auto-hover-active {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 85, 255, 0.2);
+            border-color: rgba(0, 85, 255, 0.3);
+        }
+        .data-panel.auto-hover-active .corner-accent {
+            width: 12px;
+            height: 12px;
+        }
+        
+        /* 按钮自动悬停 */
+        .btn-primary.auto-hover-active {
+            background-color: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+        .btn-primary.auto-hover-active::before {
+            left: 100%;
+        }
+        .btn-secondary.auto-hover-active {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .btn-secondary.auto-hover-active::before {
+            width: 100%;
+        }
+        
+        /* Hero 图片自动悬停 */
+        .hero-images.auto-hover-active .stack-card:nth-child(1) {
+            transform: rotate(-6deg) translateX(-50px) translateY(-15px);
+            box-shadow: 0 30px 60px -15px rgba(0, 85, 255, 0.15);
+        }
+        .hero-images.auto-hover-active .stack-card:nth-child(2) {
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.9);
+            border-color: var(--accent);
+        }
+        .hero-images.auto-hover-active .stack-card:nth-child(2) img {
+            transform: scale(1.02);
+        }
+        .hero-images.auto-hover-active .stack-card:nth-child(3) {
+            transform: rotate(5deg) translateX(40px) translateY(15px);
+            box-shadow: 0 30px 60px -15px rgba(0, 85, 255, 0.15);
         }
     </style>
 </head>
 <body>
+
+    <!-- 动态模糊光效 -->
+    <div class="glow-container">
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+        <div class="glow-orb glow-orb-3"></div>
+        <div class="glow-orb glow-orb-4"></div>
+    </div>
+    
+    <!-- 鼠标跟随光效 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
 
     <!-- 右上角弧线装饰 -->
     <div class="corner-arcs">
@@ -357,7 +570,7 @@
 
     <!-- 全局垂直辅助线 -->
     <div class="rail-v left-[5%]"></div>
-    <div class="rail-v left-[50%] opacity-20"></div>
+    <div class="rail-v left-[50%] opacity-40"></div>
     <div class="rail-v right-[5%]"></div>
 
 <!-- 延续之前的装饰性准星 -->
@@ -366,17 +579,39 @@
     <div class="junction top-[150px] right-[5%] -translate-x-1/2 -translate-y-1/2"></div>
 
     <!-- 导航栏 -->
-    <nav class="fixed top-0 w-full z-50 h-14 border-b border-[#161617] bg-[#050505]/90 backdrop-blur-md">
+    <nav class="fixed top-0 w-full z-50 h-14 border-b border-[#2a2a2b] bg-[#050505]/90 backdrop-blur-md">
         <div class="container-main h-full flex items-center justify-between">
             <div class="flex items-center gap-12">
-                <span class="font-bold tracking-[0.3em] text-[11px] uppercase">Simprint</span>
+                <a href="index.html" class="flex items-center gap-6 hover:opacity-80 transition-opacity">
+                    <img src="logo.png" alt="Simprint" class="w-6 h-6">
+                    <span class="w-px h-5 bg-[#404040] rotate-12"></span>
+                    <span class="font-bold tracking-[0.3em] text-[11px] uppercase">Simprint</span>
+                </a>
                 <div class="hidden md:flex gap-8">
-                    <a href="#logic" class="text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Technology</a>
-                    <a href="#ops" class="text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white transition-colors">Use Cases</a>
+                    <a href="docs.html" class="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-white transition-colors" data-i18n="nav-docs">Docs</a>
+                    <a href="download.html" class="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-white transition-colors" data-i18n="nav-download">Download</a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-[#2A2A2B] hover:bg-white hover:text-black transition-all">Console</button>
+                <!-- 语言切换按钮 -->
+                <div class="relative">
+                    <button id="langToggle" class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-3 py-2 border border-[#404040] hover:border-[#606060] transition-all">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span id="currentLang">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                    </button>
+                    <div id="langDropdown" class="absolute right-0 top-full mt-2 bg-[#0a0a0a] border border-[#404040] rounded overflow-hidden opacity-0 invisible transition-all duration-200 min-w-[100px]">
+                        <button data-lang="en" class="lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between">
+                            English
+                            <span class="lang-check text-blue-500 opacity-0">✓</span>
+                        </button>
+                        <button data-lang="zh" class="lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between">
+                            中文
+                            <span class="lang-check text-blue-500 opacity-0">✓</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-[#404040] hover:bg-white hover:text-black transition-all" data-i18n="nav-console">Console</button>
             </div>
         </div>
     </nav>
@@ -387,7 +622,7 @@
         <div class="section-number left" style="top: 5rem;">01</div>
         <!-- 结构线条：水平贯穿线 -->
         <div class="rail-h top-[150px]"></div>
-        <div class="rail-h top-[85%] opacity-40"></div>
+        <div class="rail-h top-[85%] opacity-60"></div>
         
         <div class="container-main reveal">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -397,21 +632,20 @@
                     
                     <div class="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 mb-10 flex items-center gap-4">
                         <span class="w-12 h-[1px] bg-blue-600"></span>
-                        Anti-Detect Browser v4.10
+                        <span data-i18n="hero-badge">Anti-Detect Browser v4.10</span>
                     </div>
                     
-                    <h1 class="text-5xl md:text-7xl font-medium tracking-tight mb-12 leading-[1.02]">
+                    <h1 class="text-5xl md:text-7xl font-medium tracking-tight mb-12 leading-[1.02]" data-i18n="hero-title">
                         Multi-account<br>management, secured.
                     </h1>
                     
-                    <p class="text-lg md:text-xl text-[#737373] font-light leading-snug max-w-xl mb-16">
+                    <p class="text-lg md:text-xl text-[#a3a3a3] font-light leading-snug max-w-xl mb-16" data-i18n="hero-desc">
                         Simprint is a professional anti-detect browser built for teams. Create unique browser fingerprints for each profile and eliminate account correlation risks entirely.
                     </p>
                     
                     <div class="flex flex-wrap gap-6 relative">
-                        <!-- 按钮：修复了悬停颜色 -->
-                        <button class="btn-system btn-primary">Start Free Trial</button>
-                        <button class="btn-system btn-secondary">Documentation</button>
+                        <a href="download.html" class="btn-system btn-primary" data-i18n="hero-btn1">Start Free Trial</a>
+                        <a href="docs.html" class="btn-system btn-secondary" data-i18n="hero-btn2">Documentation</a>
                     </div>
                 </div>
                 
@@ -434,41 +668,37 @@
     </header>
 
     <!-- Problem Section: 带有更多交叉线 -->
-    <section id="logic" class="relative py-32 border-y border-[#161617]">
+    <section id="logic" class="relative py-32 border-y border-[#2a2a2b]">
         <!-- Section编号：右上角 -->
         <div class="section-number right">02</div>
         <!-- 结构线：非对称垂直线 -->
-        <div class="rail-v left-[35%] opacity-10"></div>
-        <div class="rail-h top-1/2 opacity-20"></div>
+        <div class="rail-v left-[35%] opacity-30"></div>
+        <div class="rail-h top-1/2 opacity-40"></div>
         <div class="junction top-1/2 left-[35%] -translate-x-1/2 -translate-y-1/2"></div>
         <div class="junction top-1/2 left-[5%] -translate-x-1/2 -translate-y-1/2"></div>
 
         <div class="container-main">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-20 items-start">
                 <div class="md:col-span-5 reveal">
-                    <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.3em] mb-8">Account Correlation Risk</div>
-                    <h2 class="text-3xl font-medium mb-8 leading-tight">Eliminate<br>fingerprint linking.</h2>
-                    <p class="text-[#737373] text-lg font-light leading-relaxed">
+                    <div class="text-sm font-bold text-neutral-400 uppercase tracking-[0.3em] mb-8" data-i18n="s02-label">Account Correlation Risk</div>
+                    <h2 class="text-3xl font-medium mb-8 leading-tight" data-i18n="s02-title">Eliminate<br>fingerprint linking.</h2>
+                    <p class="text-[#a3a3a3] text-lg font-light leading-relaxed" data-i18n="s02-desc">
                         The biggest risk in multi-account operations comes from browser fingerprint correlation. Identical Canvas, WebGL, and font signatures allow platforms to detect linked accounts, resulting in mass bans.
                     </p>
                 </div>
                 <div class="md:col-span-7 reveal">
-                    <div class="data-panel auto-hover relative p-12 border border-[#161617] bg-[#080808]">
-                        <span class="glow-dot top-left"></span>
-                        <span class="glow-dot top-right"></span>
-                        <span class="glow-dot bottom-left"></span>
-                        <span class="glow-dot bottom-right"></span>
-                        <div class="absolute -top-px -left-px w-6 h-6 border-t border-l border-blue-600"></div>
-                        <div class="absolute -bottom-px -right-px w-6 h-6 border-b border-r border-blue-600"></div>
+                    <div class="data-panel relative p-12 border border-[#2a2a2b] bg-[#080808]">
+                        <div class="corner-accent absolute -top-px -left-px w-6 h-6 border-t border-l border-blue-600"></div>
+                        <div class="corner-accent absolute -bottom-px -right-px w-6 h-6 border-b border-r border-blue-600"></div>
                         
-                        <div class="grid grid-cols-2 gap-12 relative z-10">
-                            <div>
-                                <div class="text-[10px] font-bold text-blue-600 uppercase mb-4 tracking-widest">Fingerprint Uniqueness</div>
-                                <div class="text-4xl font-light tracking-tighter stat-value">99.98%</div>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div class="stat-item">
+                                <div class="text-sm font-bold text-blue-600 uppercase mb-4 tracking-widest" data-i18n="s02-stat1">Fingerprint Uniqueness</div>
+                                <div class="stat-value text-4xl font-light tracking-tighter">99.98%</div>
                             </div>
-                            <div>
-                                <div class="text-[10px] font-bold text-blue-600 uppercase mb-4 tracking-widest">Detection Pass Rate</div>
-                                <div class="text-4xl font-light tracking-tighter stat-value">100%</div>
+                            <div class="stat-item">
+                                <div class="text-sm font-bold text-blue-600 uppercase mb-4 tracking-widest" data-i18n="s02-stat2">Detection Pass Rate</div>
+                                <div class="stat-value text-4xl font-light tracking-tighter">100%</div>
                             </div>
                         </div>
                     </div>
@@ -483,44 +713,32 @@
         <div class="section-number left">03</div>
         <!-- 结构线条 -->
         <div class="rail-h top-0"></div>
-        <div class="rail-v left-[50%] opacity-5"></div>
+        <div class="rail-v left-[50%] opacity-20"></div>
         
         <div class="container-main">
-            <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.3em] mb-20">Core Technology</div>
+            <div class="text-sm font-bold text-neutral-400 uppercase tracking-[0.3em] mb-20" data-i18n="s03-label">Core Technology</div>
             
             <div class="grid md:grid-cols-3 gap-6">
-                <div class="tech-card auto-hover bg-[#0a0a0a] border border-[#161617] p-12 reveal">
-                    <span class="glow-dot top-left"></span>
-                    <span class="glow-dot top-right"></span>
-                    <span class="glow-dot bottom-left"></span>
-                    <span class="glow-dot bottom-right"></span>
-                    <i data-lucide="fingerprint" class="w-5 h-5 text-blue-600 mb-8 relative z-10"></i>
-                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4 relative z-10">Fingerprint Engine</h3>
-                    <p class="text-xs text-[#737373] leading-relaxed font-light relative z-10">
+                <div class="tech-card bg-[#0a0a0a] border border-[#2a2a2b] p-12 reveal">
+                    <i data-lucide="fingerprint" class="w-7 h-7 text-blue-600 mb-8"></i>
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-4" data-i18n="s03-c1-title">Fingerprint Engine</h3>
+                    <p class="text-base text-[#a3a3a3] leading-relaxed font-light" data-i18n="s03-c1-desc">
                         Deep Chromium kernel customization. Authentic simulation of 100+ fingerprint parameters including Canvas, WebGL, Audio, and Fonts. Passes all major detection platforms.
                     </p>
                     <i data-lucide="fingerprint" class="bg-icon"></i>
                 </div>
-                <div class="tech-card auto-hover bg-[#0a0a0a] border border-[#161617] p-12 reveal">
-                    <span class="glow-dot top-left"></span>
-                    <span class="glow-dot top-right"></span>
-                    <span class="glow-dot bottom-left"></span>
-                    <span class="glow-dot bottom-right"></span>
-                    <i data-lucide="shield-check" class="w-5 h-5 text-blue-600 mb-8 relative z-10"></i>
-                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4 relative z-10">Environment Isolation</h3>
-                    <p class="text-xs text-[#737373] leading-relaxed font-light relative z-10">
+                <div class="tech-card bg-[#0a0a0a] border border-[#2a2a2b] p-12 reveal">
+                    <i data-lucide="shield-check" class="w-7 h-7 text-blue-600 mb-8"></i>
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-4" data-i18n="s03-c2-title">Environment Isolation</h3>
+                    <p class="text-base text-[#a3a3a3] leading-relaxed font-light" data-i18n="s03-c2-desc">
                         Each browser profile has isolated cookies, cache, and local storage. Combined with dedicated proxy IPs, achieve complete separation between accounts.
                     </p>
                     <i data-lucide="shield-check" class="bg-icon"></i>
                 </div>
-                <div class="tech-card auto-hover bg-[#0a0a0a] border border-[#161617] p-12 reveal">
-                    <span class="glow-dot top-left"></span>
-                    <span class="glow-dot top-right"></span>
-                    <span class="glow-dot bottom-left"></span>
-                    <span class="glow-dot bottom-right"></span>
-                    <i data-lucide="users" class="w-5 h-5 text-blue-600 mb-8 relative z-10"></i>
-                    <h3 class="text-sm font-bold uppercase tracking-widest mb-4 relative z-10">Team Collaboration</h3>
-                    <p class="text-xs text-[#737373] leading-relaxed font-light relative z-10">
+                <div class="tech-card bg-[#0a0a0a] border border-[#2a2a2b] p-12 reveal">
+                    <i data-lucide="users" class="w-7 h-7 text-blue-600 mb-8"></i>
+                    <h3 class="text-lg font-bold uppercase tracking-widest mb-4" data-i18n="s03-c3-title">Team Collaboration</h3>
+                    <p class="text-base text-[#a3a3a3] leading-relaxed font-light" data-i18n="s03-c3-desc">
                         Cloud sync and team sharing for browser profiles. Granular permission controls enable distributed teams to efficiently manage thousands of accounts together.
                     </p>
                     <i data-lucide="users" class="bg-icon"></i>
@@ -530,57 +748,45 @@
     </section>
 
     <!-- Use Cases: 带有对齐标记 -->
-    <section id="ops" class="relative py-32 border-t border-[#161617] bg-[#030303]">
+    <section id="ops" class="relative py-32 border-t border-[#2a2a2b] bg-[#030303]">
         <!-- Section编号：右上角 -->
         <div class="section-number right">04</div>
         <div class="container-main">
             <div class="grid lg:grid-cols-12 gap-12">
                 <div class="lg:col-span-4 reveal">
-                    <div class="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.3em] mb-8">Use Cases</div>
-                    <h3 class="text-3xl font-medium">Built for Scale.</h3>
+                    <div class="text-sm font-bold text-neutral-400 uppercase tracking-[0.3em] mb-8" data-i18n="s04-label">Use Cases</div>
+                    <h3 class="text-3xl font-medium" data-i18n="s04-title">Built for Scale.</h3>
                 </div>
                 <div class="lg:col-span-8 space-y-4">
-                    <div class="auto-hover p-10 border border-[#161617] bg-black reveal relative group overflow-hidden transition-colors hover:border-neutral-800">
-                        <span class="glow-dot top-left"></span>
-                        <span class="glow-dot top-right"></span>
-                        <span class="glow-dot bottom-left"></span>
-                        <span class="glow-dot bottom-right"></span>
-                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h4 class="text-sm font-bold uppercase tracking-widest">E-commerce Operations</h4>
-                            <span class="text-[10px] font-mono text-neutral-800">Amazon / eBay / Shopee</span>
+                    <div class="use-case-card p-10 border border-[#2a2a2b] bg-black reveal relative overflow-hidden">
+                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-bold uppercase tracking-widest" data-i18n="s04-case1-title">E-commerce Operations</h4>
+                            <span class="text-sm font-mono text-neutral-400" data-i18n="s04-case1-plat">Amazon / eBay / Shopee</span>
                         </div>
-                        <p class="text-sm text-[#737373] font-light max-w-xl relative z-10">
+                        <p class="text-lg text-[#a3a3a3] font-light max-w-xl" data-i18n="s04-case1-desc">
                             Securely manage multiple storefronts with isolated browser environments and dedicated IPs. Avoid multi-store correlation detection and protect your business assets.
                         </p>
                     </div>
                     
-                    <div class="auto-hover p-10 border border-[#161617] bg-black reveal relative group overflow-hidden transition-colors hover:border-neutral-800">
-                        <span class="glow-dot top-left"></span>
-                        <span class="glow-dot top-right"></span>
-                        <span class="glow-dot bottom-left"></span>
-                        <span class="glow-dot bottom-right"></span>
-                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h4 class="text-sm font-bold uppercase tracking-widest">Advertising Management</h4>
-                            <span class="text-[10px] font-mono text-neutral-800">Facebook / Google / TikTok</span>
+                    <div class="use-case-card p-10 border border-[#2a2a2b] bg-black reveal relative overflow-hidden">
+                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-bold uppercase tracking-widest" data-i18n="s04-case2-title">Advertising Management</h4>
+                            <span class="text-sm font-mono text-neutral-400" data-i18n="s04-case2-plat">Facebook / Google / TikTok</span>
                         </div>
-                        <p class="text-sm text-[#737373] font-light max-w-xl relative z-10">
+                        <p class="text-lg text-[#a3a3a3] font-light max-w-xl" data-i18n="s04-case2-desc">
                             Manage ad accounts at scale with complete asset isolation. Prevent cascading bans from single account issues and maximize campaign efficiency and account longevity.
                         </p>
                     </div>
                     
-                    <div class="auto-hover p-10 border border-[#161617] bg-black reveal relative group overflow-hidden transition-colors hover:border-neutral-800">
-                        <span class="glow-dot top-left"></span>
-                        <span class="glow-dot top-right"></span>
-                        <span class="glow-dot bottom-left"></span>
-                        <span class="glow-dot bottom-right"></span>
-                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h4 class="text-sm font-bold uppercase tracking-widest">Social Media Matrix</h4>
-                            <span class="text-[10px] font-mono text-neutral-800">Twitter / Instagram / YouTube</span>
+                    <div class="use-case-card p-10 border border-[#2a2a2b] bg-black reveal relative overflow-hidden">
+                        <div class="block-marker -left-px top-1/2 -translate-y-1/2 opacity-0"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-bold uppercase tracking-widest" data-i18n="s04-case3-title">Social Media Matrix</h4>
+                            <span class="text-sm font-mono text-neutral-400" data-i18n="s04-case3-plat">Twitter / Instagram / YouTube</span>
                         </div>
-                        <p class="text-sm text-[#737373] font-light max-w-xl relative z-10">
+                        <p class="text-lg text-[#a3a3a3] font-light max-w-xl" data-i18n="s04-case3-desc">
                             Operate multiple social accounts simultaneously to build your brand presence. Each account runs in its own isolated environment for safe content distribution and engagement.
                         </p>
                     </div>
@@ -590,34 +796,33 @@
     </section>
 
     <!-- CTA Section: 极致的克制 -->
-    <section class="relative py-48 text-center border-t border-[#161617]">
+    <section class="relative py-48 text-center border-t border-[#2a2a2b]">
         <!-- Section编号：左上角 -->
         <div class="section-number left">05</div>
         <!-- 密集的交叉线 -->
         <div class="rail-v left-1/2 -translate-x-1/2 h-20 top-0"></div>
-        <div class="rail-h top-1/2 opacity-10"></div>
+        <div class="rail-h top-1/2 opacity-30"></div>
         <div class="junction top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
         <div class="container-main reveal">
-            <h2 class="text-3xl font-medium mb-8">Ready to Scale Securely.</h2>
-            <p class="text-neutral-500 mb-12 text-sm leading-relaxed max-w-md mx-auto">
+            <h2 class="text-3xl font-medium mb-8" data-i18n="cta-title">Ready to Scale Securely.</h2>
+            <p class="text-neutral-400 mb-12 text-lg leading-relaxed max-w-xl mx-auto" data-i18n="cta-desc">
                 Simprint provides enterprise-grade anti-detect browser solutions for professional teams. Start your free trial and experience truly secure multi-account management.
             </p>
             <div class="flex justify-center">
-                <!-- 修复后的按钮 -->
-                <button class="btn-system btn-primary px-12">Start Free Trial</button>
+                <a href="download.html" class="btn-system btn-primary px-12" data-i18n="cta-btn">Start Free Trial</a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 border-t border-[#161617] bg-[#050505] relative z-20">
-        <div class="container-main flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] font-bold uppercase tracking-[0.3em] text-neutral-600">
+    <footer class="py-12 border-t border-[#2a2a2b] bg-[#050505] relative z-20">
+        <div class="container-main flex flex-col md:flex-row justify-between items-center gap-8 text-sm font-bold uppercase tracking-[0.2em] text-neutral-400">
             <div>© Simprint 2024</div>
             <div class="flex gap-10">
-                <a href="#" class="hover:text-white transition-colors">Help Center</a>
-                <a href="#" class="hover:text-white transition-colors">Privacy</a>
-                <a href="#" class="text-blue-600">Status: Operational</a>
+                <a href="#" class="hover:text-white transition-colors" data-i18n="footer-help">Help Center</a>
+                <a href="#" class="hover:text-white transition-colors" data-i18n="footer-privacy">Privacy</a>
+                <a href="#" class="text-blue-600" data-i18n="footer-status">Status: Operational</a>
             </div>
         </div>
     </footer>
@@ -626,7 +831,7 @@
         // 初始化图标
         lucide.createIcons();
 
-        // Reveal 动画逻辑 + 自动悬浮效果
+        // Reveal 动画逻辑
         const observerOptions = {
             threshold: 0.1,
             rootMargin: "0px 0px -50px 0px"
@@ -637,60 +842,286 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                     
-                    // 触发自动悬浮动画效果
-                    if (entry.target.classList.contains('auto-hover')) {
-                        triggerAutoHover(entry.target);
-                    }
-                    
-                    // 检查子元素中的 auto-hover
-                    entry.target.querySelectorAll('.auto-hover').forEach((el, index) => {
-                        setTimeout(() => triggerAutoHover(el), index * 150);
-                    });
-                    
-                    // 按钮入场闪烁
-                    entry.target.querySelectorAll('.btn-system').forEach((btn, index) => {
+                    // 首次进入视口时自动播放悬停动画
+                    if (!entry.target.dataset.played) {
+                        entry.target.dataset.played = 'true';
+                        
+                        // 延迟触发，等待 reveal 动画完成
                         setTimeout(() => {
-                            btn.classList.add('animate-entry');
-                            setTimeout(() => btn.classList.remove('animate-entry'), 800);
-                        }, index * 100 + 300);
-                    });
+                            autoPlayHoverEffect(entry.target);
+                        }, 300);
+                    }
                 }
             });
         }, observerOptions);
 
-        // 触发自动悬浮效果的函数
-        function triggerAutoHover(element) {
-            // 添加入场动画类
-            element.classList.add('animate-entry');
-            
-            // 触发角落发光点动画
-            element.querySelectorAll('.glow-dot').forEach((dot, index) => {
+        // 自动播放悬停效果
+        function autoPlayHoverEffect(container) {
+            // 技术卡片
+            const techCards = container.querySelectorAll('.tech-card');
+            techCards.forEach((card, index) => {
                 setTimeout(() => {
-                    dot.classList.add('animate');
-                    setTimeout(() => dot.classList.remove('animate'), 1000);
-                }, index * 100);
+                    card.classList.add('auto-hover-active');
+                    setTimeout(() => card.classList.remove('auto-hover-active'), 800);
+                }, index * 150);
             });
             
-            // 动画结束后移除类
-            setTimeout(() => {
-                element.classList.remove('animate-entry');
-            }, 1500);
+            // 如果容器本身是技术卡片
+            if (container.classList.contains('tech-card')) {
+                container.classList.add('auto-hover-active');
+                setTimeout(() => container.classList.remove('auto-hover-active'), 800);
+            }
+            
+            // 用例卡片
+            const useCaseCards = container.querySelectorAll('.use-case-card');
+            useCaseCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('auto-hover-active');
+                    setTimeout(() => card.classList.remove('auto-hover-active'), 800);
+                }, index * 150);
+            });
+            
+            if (container.classList.contains('use-case-card')) {
+                container.classList.add('auto-hover-active');
+                setTimeout(() => container.classList.remove('auto-hover-active'), 800);
+            }
+            
+            // 数据面板
+            const dataPanels = container.querySelectorAll('.data-panel');
+            dataPanels.forEach(panel => {
+                panel.classList.add('auto-hover-active');
+                setTimeout(() => panel.classList.remove('auto-hover-active'), 800);
+            });
+            
+            if (container.classList.contains('data-panel')) {
+                container.classList.add('auto-hover-active');
+                setTimeout(() => container.classList.remove('auto-hover-active'), 800);
+            }
+            
+            // 按钮
+            const buttons = container.querySelectorAll('.btn-system');
+            buttons.forEach((btn, index) => {
+                setTimeout(() => {
+                    btn.classList.add('auto-hover-active');
+                    setTimeout(() => btn.classList.remove('auto-hover-active'), 600);
+                }, index * 100 + 200);
+            });
         }
+        
+        // Hero 图片首次加载动画
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const heroImages = document.querySelector('.hero-images');
+                if (heroImages) {
+                    heroImages.classList.add('auto-hover-active');
+                    setTimeout(() => heroImages.classList.remove('auto-hover-active'), 1200);
+                }
+            }, 800);
+        });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         
-        // 页面加载时也触发 Hero 区域的动画
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.hero-images .stack-card').forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.transition = 'transform 0.6s ease, box-shadow 0.6s ease';
-                    card.style.transform = card.style.transform + ' scale(1.02)';
-                    setTimeout(() => {
-                        card.style.transform = card.style.transform.replace(' scale(1.02)', '');
-                    }, 300);
-                }, index * 200 + 500);
+        // 语言切换功能
+        const langToggle = document.getElementById('langToggle');
+        const langDropdown = document.getElementById('langDropdown');
+        const currentLangSpan = document.getElementById('currentLang');
+        const langOptions = document.querySelectorAll('.lang-option');
+        
+        // 多语言文本配置
+        const translations = {
+            en: {
+                nav: { docs: 'Docs', download: 'Download', console: 'Console' },
+                hero: {
+                    badge: 'Anti-Detect Browser v4.10',
+                    title: 'Multi-account<br>management, secured.',
+                    desc: 'Simprint is a professional anti-detect browser built for teams. Create unique browser fingerprints for each profile and eliminate account correlation risks entirely.',
+                    btn1: 'Start Free Trial',
+                    btn2: 'Documentation'
+                },
+                section02: {
+                    label: 'Account Correlation Risk',
+                    title: 'Eliminate<br>fingerprint linking.',
+                    desc: 'The biggest risk in multi-account operations comes from browser fingerprint correlation. Identical Canvas, WebGL, and font signatures allow platforms to detect linked accounts, resulting in mass bans.',
+                    stat1: 'Fingerprint Uniqueness',
+                    stat2: 'Detection Pass Rate'
+                },
+                section03: {
+                    label: 'Core Technology',
+                    card1: { title: 'Fingerprint Engine', desc: 'Deep Chromium kernel customization. Authentic simulation of 100+ fingerprint parameters including Canvas, WebGL, Audio, and Fonts. Passes all major detection platforms.' },
+                    card2: { title: 'Environment Isolation', desc: 'Each browser profile has isolated cookies, cache, and local storage. Combined with dedicated proxy IPs, achieve complete separation between accounts.' },
+                    card3: { title: 'Team Collaboration', desc: 'Cloud sync and team sharing for browser profiles. Granular permission controls enable distributed teams to efficiently manage thousands of accounts together.' }
+                },
+                section04: {
+                    label: 'Use Cases',
+                    title: 'Built for Scale.',
+                    case1: { title: 'E-commerce Operations', platforms: 'Amazon / eBay / Shopee', desc: 'Securely manage multiple storefronts with isolated browser environments and dedicated IPs. Avoid multi-store correlation detection and protect your business assets.' },
+                    case2: { title: 'Advertising Management', platforms: 'Facebook / Google / TikTok', desc: 'Manage ad accounts at scale with complete asset isolation. Prevent cascading bans from single account issues and maximize campaign efficiency and account longevity.' },
+                    case3: { title: 'Social Media Matrix', platforms: 'Twitter / Instagram / YouTube', desc: 'Operate multiple social accounts simultaneously to build your brand presence. Each account runs in its own isolated environment for safe content distribution and engagement.' }
+                },
+                cta: {
+                    title: 'Ready to Scale Securely.',
+                    desc: 'Simprint provides enterprise-grade anti-detect browser solutions for professional teams. Start your free trial and experience truly secure multi-account management.',
+                    btn: 'Start Free Trial'
+                },
+                footer: { help: 'Help Center', privacy: 'Privacy', status: 'Status: Operational' }
+            },
+            zh: {
+                nav: { docs: '文档', download: '下载', console: '控制台' },
+                hero: {
+                    badge: '反检测浏览器 v4.10',
+                    title: '多账号管理<br>安全无忧',
+                    desc: 'Simprint 是一款专为团队打造的专业反检测浏览器。为每个配置文件创建独特的浏览器指纹，彻底消除账号关联风险。',
+                    btn1: '免费试用',
+                    btn2: '查看文档'
+                },
+                section02: {
+                    label: '账号关联风险',
+                    title: '消除指纹关联',
+                    desc: '多账号运营的最大风险来自浏览器指纹关联。相同的 Canvas、WebGL 和字体签名会让平台检测到关联账号，导致大规模封禁。',
+                    stat1: '指纹唯一性',
+                    stat2: '检测通过率'
+                },
+                section03: {
+                    label: '核心技术',
+                    card1: { title: '指纹引擎', desc: '深度 Chromium 内核定制。真实模拟 100+ 指纹参数，包括 Canvas、WebGL、音频和字体。通过所有主流检测平台。' },
+                    card2: { title: '环境隔离', desc: '每个浏览器配置文件都有独立的 Cookie、缓存和本地存储。结合专用代理 IP，实现账号之间的完全隔离。' },
+                    card3: { title: '团队协作', desc: '浏览器配置文件的云端同步和团队共享。精细的权限控制让分布式团队能够高效地共同管理数千个账号。' }
+                },
+                section04: {
+                    label: '应用场景',
+                    title: '为规模而生',
+                    case1: { title: '电商运营', platforms: 'Amazon / eBay / Shopee', desc: '通过隔离的浏览器环境和专用 IP 安全管理多个店铺。避免多店铺关联检测，保护您的商业资产。' },
+                    case2: { title: '广告投放', platforms: 'Facebook / Google / TikTok', desc: '通过完全的资产隔离大规模管理广告账户。防止单个账户问题引发连锁封禁，最大化投放效率和账户寿命。' },
+                    case3: { title: '社媒矩阵', platforms: 'Twitter / Instagram / YouTube', desc: '同时运营多个社交账号，打造品牌影响力。每个账号都在独立的隔离环境中运行，安全地进行内容分发和互动。' }
+                },
+                cta: {
+                    title: '安全扩展，即刻启程',
+                    desc: 'Simprint 为专业团队提供企业级反检测浏览器解决方案。立即开始免费试用，体验真正安全的多账号管理。',
+                    btn: '免费试用'
+                },
+                footer: { help: '帮助中心', privacy: '隐私政策', status: '状态：正常运行' }
+            }
+        };
+        
+        // 从 localStorage 读取语言设置，默认为 'en'
+        let currentLang = localStorage.getItem('simprint-lang') || 'en';
+        
+        // 切换下拉菜单
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+        
+        // 点击其他地方关闭下拉菜单
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
+        
+        // 语言选项点击
+        langOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.dataset.lang;
+                if (lang !== currentLang) {
+                    currentLang = lang;
+                    localStorage.setItem('simprint-lang', lang);
+                    currentLangSpan.textContent = lang.toUpperCase();
+                    updateLanguage(lang);
+                    
+                    // 更新选中状态
+                    langOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                }
+                langDropdown.classList.remove('show');
             });
         });
+        
+        // 初始化语言设置
+        currentLangSpan.textContent = currentLang.toUpperCase();
+        document.querySelector(`[data-lang="${currentLang}"]`).classList.add('active');
+        if (currentLang !== 'en') {
+            updateLanguage(currentLang);
+        }
+        
+        // 更新页面语言
+        function updateLanguage(lang) {
+            const t = translations[lang];
+            
+            // 导航
+            document.querySelector('[data-i18n="nav-docs"]').textContent = t.nav.docs;
+            document.querySelector('[data-i18n="nav-download"]').textContent = t.nav.download;
+            document.querySelector('[data-i18n="nav-console"]').textContent = t.nav.console;
+            
+            // Hero
+            document.querySelector('[data-i18n="hero-badge"]').innerHTML = t.hero.badge;
+            document.querySelector('[data-i18n="hero-title"]').innerHTML = t.hero.title;
+            document.querySelector('[data-i18n="hero-desc"]').textContent = t.hero.desc;
+            document.querySelector('[data-i18n="hero-btn1"]').textContent = t.hero.btn1;
+            document.querySelector('[data-i18n="hero-btn2"]').textContent = t.hero.btn2;
+            
+            // Section 02
+            document.querySelector('[data-i18n="s02-label"]').textContent = t.section02.label;
+            document.querySelector('[data-i18n="s02-title"]').innerHTML = t.section02.title;
+            document.querySelector('[data-i18n="s02-desc"]').textContent = t.section02.desc;
+            document.querySelector('[data-i18n="s02-stat1"]').textContent = t.section02.stat1;
+            document.querySelector('[data-i18n="s02-stat2"]').textContent = t.section02.stat2;
+            
+            // Section 03
+            document.querySelector('[data-i18n="s03-label"]').textContent = t.section03.label;
+            document.querySelector('[data-i18n="s03-c1-title"]').textContent = t.section03.card1.title;
+            document.querySelector('[data-i18n="s03-c1-desc"]').textContent = t.section03.card1.desc;
+            document.querySelector('[data-i18n="s03-c2-title"]').textContent = t.section03.card2.title;
+            document.querySelector('[data-i18n="s03-c2-desc"]').textContent = t.section03.card2.desc;
+            document.querySelector('[data-i18n="s03-c3-title"]').textContent = t.section03.card3.title;
+            document.querySelector('[data-i18n="s03-c3-desc"]').textContent = t.section03.card3.desc;
+            
+            // Section 04
+            document.querySelector('[data-i18n="s04-label"]').textContent = t.section04.label;
+            document.querySelector('[data-i18n="s04-title"]').textContent = t.section04.title;
+            document.querySelector('[data-i18n="s04-case1-title"]').textContent = t.section04.case1.title;
+            document.querySelector('[data-i18n="s04-case1-plat"]').textContent = t.section04.case1.platforms;
+            document.querySelector('[data-i18n="s04-case1-desc"]').textContent = t.section04.case1.desc;
+            document.querySelector('[data-i18n="s04-case2-title"]').textContent = t.section04.case2.title;
+            document.querySelector('[data-i18n="s04-case2-plat"]').textContent = t.section04.case2.platforms;
+            document.querySelector('[data-i18n="s04-case2-desc"]').textContent = t.section04.case2.desc;
+            document.querySelector('[data-i18n="s04-case3-title"]').textContent = t.section04.case3.title;
+            document.querySelector('[data-i18n="s04-case3-plat"]').textContent = t.section04.case3.platforms;
+            document.querySelector('[data-i18n="s04-case3-desc"]').textContent = t.section04.case3.desc;
+            
+            // CTA
+            document.querySelector('[data-i18n="cta-title"]').textContent = t.cta.title;
+            document.querySelector('[data-i18n="cta-desc"]').textContent = t.cta.desc;
+            document.querySelector('[data-i18n="cta-btn"]').textContent = t.cta.btn;
+            
+            // Footer
+            document.querySelector('[data-i18n="footer-help"]').textContent = t.footer.help;
+            document.querySelector('[data-i18n="footer-privacy"]').textContent = t.footer.privacy;
+            document.querySelector('[data-i18n="footer-status"]').textContent = t.footer.status;
+        }
+        
+        // 鼠标跟随光效
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.classList.add('active');
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.classList.remove('active');
+        });
+        
+        // 平滑跟随动画
+        function animateCursorGlow() {
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateCursorGlow);
+        }
+        animateCursorGlow();
     </script>
 </body>
 </html>

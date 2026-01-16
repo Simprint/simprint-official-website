@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation — Simprint Anti-Detect Browser</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #050505;
+            --rail: #2a2a2b;
+            --rail-active: #404040;
+            --accent: #0055FF;
+            --text-main: #E5E5E5;
+            --text-muted: #a3a3a3;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+        }
+
+        /* --- 动态模糊光效系统 --- */
+        .glow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            mix-blend-mode: screen;
+        }
+        
+        /* 主光球 - 蓝色 (右上) */
+        .glow-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.6) 0%, rgba(0, 85, 255, 0) 70%);
+            top: -200px;
+            right: -100px;
+            animation: floatOrb1 20s ease-in-out infinite;
+        }
+        
+        /* 蓝色光球 (左下) */
+        .glow-orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.6) 0%, rgba(0, 85, 255, 0) 70%);
+            bottom: -200px;
+            left: -100px;
+            animation: floatOrb2 22s ease-in-out infinite;
+        }
+        
+        @keyframes floatOrb1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-50px, 100px) scale(1.1); }
+            50% { transform: translate(-100px, 50px) scale(0.9); }
+            75% { transform: translate(-30px, 150px) scale(1.05); }
+        }
+        
+        @keyframes floatOrb2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -100px) scale(1.1); }
+            50% { transform: translate(100px, -50px) scale(0.9); }
+            75% { transform: translate(30px, -150px) scale(1.05); }
+        }
+        
+        /* 鼠标跟随光效 */
+        .cursor-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 85, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(40px);
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .cursor-glow.active {
+            opacity: 1;
+        }
+        
+        .container-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+        
+        /* 文档页面容器 */
+        .docs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            position: relative;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* 左侧边栏 */
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: max(3rem, calc((100vw - 1400px) / 2 + 3rem));
+            width: 260px;
+            height: calc(100vh - 56px);
+            background: transparent;
+            border-right: 1px solid var(--rail);
+            overflow-y: auto;
+            z-index: 40;
+            padding: 2rem 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--rail-active);
+            border-radius: 2px;
+        }
+
+        /* 目录分类 */
+        .nav-category {
+            padding: 0 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-category-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            font-size: 14px;
+            color: var(--text-muted);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            margin-left: 0.5rem;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-item.active {
+            color: var(--text-main);
+            background: rgba(0, 85, 255, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item i {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        .nav-item.active i {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* 主内容区 */
+        .main-content {
+            margin-left: 280px;
+            padding: 3rem 4rem;
+            max-width: calc(1400px - 280px - 6rem);
+            min-height: calc(100vh - 56px);
+        }
+
+        /* 文档内容样式 */
+        .doc-section {
+            margin-bottom: 4rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--rail);
+        }
+
+        .doc-section:last-child {
+            border-bottom: none;
+        }
+
+        .doc-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .doc-title i {
+            color: var(--accent);
+        }
+
+        .doc-subtitle {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text-main);
+        }
+
+        .doc-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* 代码块 */
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid var(--rail);
+            border-radius: 4px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 20px;
+            height: 20px;
+            border-top: 1px solid var(--accent);
+            border-left: 1px solid var(--accent);
+        }
+
+        .code-block code {
+            color: #e0e0e0;
+        }
+
+        .code-comment {
+            color: #6a737d;
+        }
+
+        .code-keyword {
+            color: #ff7b72;
+        }
+
+        .code-string {
+            color: #a5d6ff;
+        }
+
+        .code-number {
+            color: #79c0ff;
+        }
+
+        /* 提示框 */
+        .tip-box {
+            background: rgba(0, 85, 255, 0.08);
+            border: 1px solid rgba(0, 85, 255, 0.2);
+            border-radius: 4px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .tip-box i {
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .tip-box p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 165, 0, 0.08);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+        }
+
+        .warning-box i {
+            color: #ffa500;
+        }
+
+        /* 功能列表 */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li i {
+            color: var(--accent);
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .feature-list li span {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* 表格 */
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .doc-table th,
+        .doc-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--rail);
+        }
+
+        .doc-table th {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            background: #0a0a0a;
+        }
+
+        .doc-table td {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .doc-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* 语言切换 */
+        #langDropdown.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lang-option.active .lang-check {
+            opacity: 1;
+        }
+
+        /* 移动端响应 */
+        @media (max-width: 1024px) {
+            .docs-container {
+                padding: 0;
+            }
+            
+            .sidebar {
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 1.5rem;
+                max-width: 100%;
+            }
+
+            .menu-toggle {
+                display: flex !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 动态模糊光效 -->
+    <div class="glow-container">
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+    </div>
+    
+    <!-- 鼠标跟随光效 -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 h-14 border-b border-[#2a2a2b] bg-[#050505]/90 backdrop-blur-md">
+        <div class="container-main h-full flex items-center justify-between">
+            <div class="flex items-center gap-12">
+                <a href="index.html" class="flex items-center gap-6 hover:opacity-80 transition-opacity">
+                    <img src="logo.png" alt="Simprint" class="w-6 h-6">
+                    <span class="w-px h-5 bg-[#404040] rotate-12"></span>
+                    <span class="font-bold tracking-[0.3em] text-[11px] uppercase">Simprint</span>
+                </a>
+                <div class="hidden md:flex gap-8">
+                    <a href="docs.html" class="text-[10px] uppercase tracking-widest text-white transition-colors" data-i18n="nav-docs">Docs</a>
+                    <a href="download.html" class="text-[10px] uppercase tracking-widest text-neutral-400 hover:text-white transition-colors" data-i18n="nav-download">Download</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- 语言切换按钮 -->
+                <div class="relative">
+                    <button id="langToggle" class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-3 py-2 border border-[#404040] hover:border-[#606060] transition-all">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span id="currentLang">EN</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                    </button>
+                    <div id="langDropdown" class="absolute right-0 top-full mt-2 bg-[#0a0a0a] border border-[#404040] rounded overflow-hidden opacity-0 invisible transition-all duration-200 min-w-[100px]">
+                        <button data-lang="en" class="lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between">
+                            English
+                            <span class="lang-check text-blue-500 opacity-0">✓</span>
+                        </button>
+                        <button data-lang="zh" class="lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between">
+                            中文
+                            <span class="lang-check text-blue-500 opacity-0">✓</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-[#404040] hover:bg-white hover:text-black transition-all" data-i18n="nav-console">Console</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 文档主体容器 -->
+    <div class="docs-container">
+        <!-- 左侧边栏 -->
+        <aside class="sidebar" id="sidebar">
+        <div class="nav-category">
+            <div class="nav-category-title" data-i18n="cat-getting-started">Getting Started</div>
+            <div class="nav-item active" data-section="introduction">
+                <i data-lucide="book-open"></i>
+                <span data-i18n="nav-intro">Introduction</span>
+            </div>
+            <div class="nav-item" data-section="installation">
+                <i data-lucide="download"></i>
+                <span data-i18n="nav-install">Installation</span>
+            </div>
+            <div class="nav-item" data-section="quickstart">
+                <i data-lucide="zap"></i>
+                <span data-i18n="nav-quickstart">Quick Start</span>
+            </div>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title" data-i18n="cat-core-features">Core Features</div>
+            <div class="nav-item" data-section="profiles">
+                <i data-lucide="user-circle"></i>
+                <span data-i18n="nav-profiles">Browser Profiles</span>
+            </div>
+            <div class="nav-item" data-section="fingerprint">
+                <i data-lucide="fingerprint"></i>
+                <span data-i18n="nav-fingerprint">Fingerprint Settings</span>
+            </div>
+            <div class="nav-item" data-section="proxy">
+                <i data-lucide="globe"></i>
+                <span data-i18n="nav-proxy">Proxy Configuration</span>
+            </div>
+            <div class="nav-item" data-section="cookies">
+                <i data-lucide="cookie"></i>
+                <span data-i18n="nav-cookies">Cookie Management</span>
+            </div>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title" data-i18n="cat-team">Team & Sync</div>
+            <div class="nav-item" data-section="team">
+                <i data-lucide="users"></i>
+                <span data-i18n="nav-team">Team Collaboration</span>
+            </div>
+            <div class="nav-item" data-section="sync">
+                <i data-lucide="cloud"></i>
+                <span data-i18n="nav-sync">Cloud Sync</span>
+            </div>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title" data-i18n="cat-advanced">Advanced</div>
+            <div class="nav-item" data-section="api">
+                <i data-lucide="code"></i>
+                <span data-i18n="nav-api">API Reference</span>
+            </div>
+            <div class="nav-item" data-section="automation">
+                <i data-lucide="bot"></i>
+                <span data-i18n="nav-automation">Automation</span>
+            </div>
+        </div>
+
+        <div class="nav-category">
+            <div class="nav-category-title" data-i18n="cat-support">Support</div>
+            <div class="nav-item" data-section="faq">
+                <i data-lucide="help-circle"></i>
+                <span data-i18n="nav-faq">FAQ</span>
+            </div>
+            <div class="nav-item" data-section="troubleshooting">
+                <i data-lucide="wrench"></i>
+                <span data-i18n="nav-troubleshooting">Troubleshooting</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content pt-14">
+        <!-- Introduction -->
+        <section class="doc-section" id="introduction">
+            <h1 class="doc-title">
+                <i data-lucide="book-open" class="w-8 h-8"></i>
+                <span data-i18n="title-intro">Introduction</span>
+            </h1>
+            <p class="doc-text" data-i18n="intro-text-1">
+                Simprint is a professional anti-detect browser designed for secure multi-account management. It creates isolated browser environments with unique fingerprints, preventing platforms from detecting account associations.
+            </p>
+            <p class="doc-text" data-i18n="intro-text-2">
+                Whether you're managing e-commerce stores, advertising accounts, or social media profiles, Simprint provides the security and isolation you need to operate at scale.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-key-features">Key Features</h2>
+            <ul class="feature-list">
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="feature-1">Unique browser fingerprints for each profile (Canvas, WebGL, Audio, Fonts)</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="feature-2">Complete environment isolation with separate cookies, cache, and storage</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="feature-3">Built-in proxy management with support for HTTP, SOCKS5, and residential proxies</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="feature-4">Team collaboration with role-based access control</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="feature-5">Cloud sync for seamless profile sharing across devices</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Installation -->
+        <section class="doc-section" id="installation">
+            <h1 class="doc-title">
+                <i data-lucide="download" class="w-8 h-8"></i>
+                <span data-i18n="title-install">Installation</span>
+            </h1>
+            <p class="doc-text" data-i18n="install-text-1">
+                Simprint is currently available for Windows. Download the installer from our official website and follow the installation wizard.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-requirements">System Requirements</h2>
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="table-component">Component</th>
+                        <th data-i18n="table-minimum">Minimum</th>
+                        <th data-i18n="table-recommended">Recommended</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-i18n="req-os-label">Operating System</td>
+                        <td>Windows 10 64-bit</td>
+                        <td>Windows 11 64-bit</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="req-ram-label">RAM</td>
+                        <td>8 GB</td>
+                        <td>16 GB+</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="req-storage-label">Storage</td>
+                        <td>500 MB</td>
+                        <td>2 GB+ SSD</td>
+                    </tr>
+                    <tr>
+                        <td data-i18n="req-cpu-label">CPU</td>
+                        <td>Dual-core 2.0 GHz</td>
+                        <td>Quad-core 3.0 GHz+</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <i data-lucide="info" class="w-5 h-5"></i>
+                <p data-i18n="install-tip">For optimal performance when running multiple browser profiles simultaneously, we recommend using an SSD and at least 16GB of RAM.</p>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="doc-section" id="quickstart">
+            <h1 class="doc-title">
+                <i data-lucide="zap" class="w-8 h-8"></i>
+                <span data-i18n="title-quickstart">Quick Start</span>
+            </h1>
+            <p class="doc-text" data-i18n="quickstart-text-1">
+                Get up and running with Simprint in just a few minutes. Follow these steps to create your first browser profile.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-step1">Step 1: Create a New Profile</h2>
+            <p class="doc-text" data-i18n="step1-text">
+                Click the "New Profile" button in the main dashboard. Give your profile a descriptive name and select the operating system and browser type to emulate.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-step2">Step 2: Configure Fingerprint</h2>
+            <p class="doc-text" data-i18n="step2-text">
+                Simprint automatically generates a unique fingerprint for each profile. You can customize specific parameters or use the "Randomize" button for a completely new identity.
+            </p>
+
+            <div class="code-block">
+                <code>
+<span class="code-comment">// Example fingerprint configuration</span>
+{
+  <span class="code-string">"userAgent"</span>: <span class="code-string">"Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."</span>,
+  <span class="code-string">"screenResolution"</span>: [<span class="code-number">1920</span>, <span class="code-number">1080</span>],
+  <span class="code-string">"timezone"</span>: <span class="code-string">"America/New_York"</span>,
+  <span class="code-string">"language"</span>: <span class="code-string">"en-US"</span>,
+  <span class="code-string">"webglVendor"</span>: <span class="code-string">"NVIDIA Corporation"</span>
+}
+                </code>
+            </div>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-step3">Step 3: Add Proxy (Optional)</h2>
+            <p class="doc-text" data-i18n="step3-text">
+                For enhanced anonymity, add a proxy to your profile. Simprint supports HTTP, HTTPS, SOCKS4, and SOCKS5 proxies.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-step4">Step 4: Launch Browser</h2>
+            <p class="doc-text" data-i18n="step4-text">
+                Click "Start" to launch the browser with your configured profile. Each profile runs in complete isolation from others.
+            </p>
+
+            <div class="warning-box tip-box">
+                <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                <p data-i18n="quickstart-warning">Always use a unique proxy IP for each profile to maximize anonymity and prevent correlation.</p>
+            </div>
+        </section>
+
+        <!-- Browser Profiles -->
+        <section class="doc-section" id="profiles">
+            <h1 class="doc-title">
+                <i data-lucide="user-circle" class="w-8 h-8"></i>
+                <span data-i18n="title-profiles">Browser Profiles</span>
+            </h1>
+            <p class="doc-text" data-i18n="profiles-text-1">
+                Browser profiles are the core of Simprint. Each profile represents a completely isolated browser environment with its own fingerprint, cookies, local storage, and cache.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-profile-management">Profile Management</h2>
+            <ul class="feature-list">
+                <li>
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <span data-i18n="profile-create">Create unlimited profiles with unique identities</span>
+                </li>
+                <li>
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                    <span data-i18n="profile-clone">Clone existing profiles to quickly duplicate settings</span>
+                </li>
+                <li>
+                    <i data-lucide="folder" class="w-5 h-5"></i>
+                    <span data-i18n="profile-organize">Organize profiles into folders and groups</span>
+                </li>
+                <li>
+                    <i data-lucide="tag" class="w-5 h-5"></i>
+                    <span data-i18n="profile-tags">Add tags for easy filtering and search</span>
+                </li>
+                <li>
+                    <i data-lucide="archive" class="w-5 h-5"></i>
+                    <span data-i18n="profile-export">Export and import profiles for backup or migration</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Fingerprint Settings -->
+        <section class="doc-section" id="fingerprint">
+            <h1 class="doc-title">
+                <i data-lucide="fingerprint" class="w-8 h-8"></i>
+                <span data-i18n="title-fingerprint">Fingerprint Settings</span>
+            </h1>
+            <p class="doc-text" data-i18n="fingerprint-text-1">
+                Simprint provides comprehensive fingerprint customization to ensure each browser profile has a unique, consistent identity that passes all major detection platforms.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-fingerprint-params">Configurable Parameters</h2>
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="table-parameter">Parameter</th>
+                        <th data-i18n="table-description">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>User Agent</td>
+                        <td data-i18n="param-useragent">Browser and OS identification string</td>
+                    </tr>
+                    <tr>
+                        <td>Screen Resolution</td>
+                        <td data-i18n="param-screen">Display dimensions and color depth</td>
+                    </tr>
+                    <tr>
+                        <td>WebGL</td>
+                        <td data-i18n="param-webgl">Graphics card vendor and renderer</td>
+                    </tr>
+                    <tr>
+                        <td>Canvas</td>
+                        <td data-i18n="param-canvas">Unique canvas rendering signature</td>
+                    </tr>
+                    <tr>
+                        <td>Audio Context</td>
+                        <td data-i18n="param-audio">Audio processing fingerprint</td>
+                    </tr>
+                    <tr>
+                        <td>Fonts</td>
+                        <td data-i18n="param-fonts">Installed system fonts list</td>
+                    </tr>
+                    <tr>
+                        <td>Timezone</td>
+                        <td data-i18n="param-timezone">Geographic timezone setting</td>
+                    </tr>
+                    <tr>
+                        <td>Language</td>
+                        <td data-i18n="param-language">Browser language preferences</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Proxy Configuration -->
+        <section class="doc-section" id="proxy">
+            <h1 class="doc-title">
+                <i data-lucide="globe" class="w-8 h-8"></i>
+                <span data-i18n="title-proxy">Proxy Configuration</span>
+            </h1>
+            <p class="doc-text" data-i18n="proxy-text-1">
+                Combine unique fingerprints with dedicated proxy IPs for maximum anonymity. Simprint supports all major proxy protocols.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="subtitle-proxy-types">Supported Proxy Types</h2>
+            <ul class="feature-list">
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span>HTTP / HTTPS</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span>SOCKS4 / SOCKS5</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="proxy-residential">Residential Proxies</span>
+                </li>
+                <li>
+                    <i data-lucide="check" class="w-5 h-5"></i>
+                    <span data-i18n="proxy-mobile">Mobile Proxies</span>
+                </li>
+            </ul>
+
+            <div class="code-block">
+                <code>
+<span class="code-comment">// Proxy configuration format</span>
+{
+  <span class="code-string">"type"</span>: <span class="code-string">"socks5"</span>,
+  <span class="code-string">"host"</span>: <span class="code-string">"proxy.example.com"</span>,
+  <span class="code-string">"port"</span>: <span class="code-number">1080</span>,
+  <span class="code-string">"username"</span>: <span class="code-string">"user"</span>,
+  <span class="code-string">"password"</span>: <span class="code-string">"pass"</span>
+}
+                </code>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="doc-section" id="faq">
+            <h1 class="doc-title">
+                <i data-lucide="help-circle" class="w-8 h-8"></i>
+                <span data-i18n="title-faq">Frequently Asked Questions</span>
+            </h1>
+
+            <h2 class="doc-subtitle" data-i18n="faq-q1">How many profiles can I create?</h2>
+            <p class="doc-text" data-i18n="faq-a1">
+                There is no limit to the number of profiles you can create. However, running multiple profiles simultaneously will consume more system resources.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="faq-q2">Does Simprint pass all detection tests?</h2>
+            <p class="doc-text" data-i18n="faq-a2">
+                Simprint is designed to pass all major browser fingerprint detection platforms including CreepJS, FingerprintJS, and Pixelscan. We continuously update our fingerprint engine to stay ahead of new detection methods.
+            </p>
+
+            <h2 class="doc-subtitle" data-i18n="faq-q3">Can I use my own proxies?</h2>
+            <p class="doc-text" data-i18n="faq-a3">
+                Yes, Simprint supports any HTTP, HTTPS, SOCKS4, or SOCKS5 proxy. You can also integrate with popular proxy providers through our API.
+            </p>
+        </section>
+    </main>
+    </div><!-- docs-container -->
+
+    <script>
+        // 初始化图标
+        lucide.createIcons();
+
+        // 侧边栏导航
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.doc-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.dataset.section;
+                const section = document.getElementById(sectionId);
+                
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                }
+
+                // 移动端关闭侧边栏
+                if (window.innerWidth < 1024) {
+                    document.getElementById('sidebar').classList.remove('open');
+                }
+            });
+        });
+
+        // 滚动时高亮当前章节
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // 移动端菜单切换
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // 语言切换
+        const langToggle = document.getElementById('langToggle');
+        const langDropdown = document.getElementById('langDropdown');
+        const currentLangSpan = document.getElementById('currentLang');
+        const langOptions = document.querySelectorAll('.lang-option');
+
+        const translations = {
+            en: {
+                topNav: {
+                    docs: 'Docs',
+                    download: 'Download',
+                    console: 'Console'
+                },
+                cat: {
+                    gettingStarted: 'Getting Started',
+                    coreFeatures: 'Core Features',
+                    team: 'Team & Sync',
+                    advanced: 'Advanced',
+                    support: 'Support'
+                },
+                nav: {
+                    intro: 'Introduction',
+                    install: 'Installation',
+                    quickstart: 'Quick Start',
+                    profiles: 'Browser Profiles',
+                    fingerprint: 'Fingerprint Settings',
+                    proxy: 'Proxy Configuration',
+                    cookies: 'Cookie Management',
+                    team: 'Team Collaboration',
+                    sync: 'Cloud Sync',
+                    api: 'API Reference',
+                    automation: 'Automation',
+                    faq: 'FAQ',
+                    troubleshooting: 'Troubleshooting'
+                }
+            },
+            zh: {
+                topNav: {
+                    docs: '文档',
+                    download: '下载',
+                    console: '控制台'
+                },
+                cat: {
+                    gettingStarted: '快速入门',
+                    coreFeatures: '核心功能',
+                    team: '团队与同步',
+                    advanced: '高级功能',
+                    support: '支持'
+                },
+                nav: {
+                    intro: '简介',
+                    install: '安装',
+                    quickstart: '快速开始',
+                    profiles: '浏览器配置',
+                    fingerprint: '指纹设置',
+                    proxy: '代理配置',
+                    cookies: 'Cookie 管理',
+                    team: '团队协作',
+                    sync: '云同步',
+                    api: 'API 参考',
+                    automation: '自动化',
+                    faq: '常见问题',
+                    troubleshooting: '故障排除'
+                }
+            }
+        };
+
+        // 从 localStorage 读取语言设置，默认为 'en'
+        let currentLang = localStorage.getItem('simprint-lang') || 'en';
+
+        langToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('show');
+        });
+
+        langOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.dataset.lang;
+                if (lang !== currentLang) {
+                    currentLang = lang;
+                    localStorage.setItem('simprint-lang', lang);
+                    currentLangSpan.textContent = lang.toUpperCase();
+                    updateLanguage(lang);
+                    
+                    langOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                }
+                langDropdown.classList.remove('show');
+            });
+        });
+
+        // 初始化语言设置
+        currentLangSpan.textContent = currentLang.toUpperCase();
+        document.querySelector(`[data-lang="${currentLang}"]`).classList.add('active');
+        if (currentLang !== 'en') {
+            updateLanguage(currentLang);
+        }
+
+        function updateLanguage(lang) {
+            const t = translations[lang];
+            
+            // 更新顶部导航栏
+            document.querySelector('[data-i18n="nav-docs"]').textContent = t.topNav.docs;
+            document.querySelector('[data-i18n="nav-download"]').textContent = t.topNav.download;
+            document.querySelector('[data-i18n="nav-console"]').textContent = t.topNav.console;
+            
+            // 更新分类标题
+            document.querySelector('[data-i18n="cat-getting-started"]').textContent = t.cat.gettingStarted;
+            document.querySelector('[data-i18n="cat-core-features"]').textContent = t.cat.coreFeatures;
+            document.querySelector('[data-i18n="cat-team"]').textContent = t.cat.team;
+            document.querySelector('[data-i18n="cat-advanced"]').textContent = t.cat.advanced;
+            document.querySelector('[data-i18n="cat-support"]').textContent = t.cat.support;
+            
+            // 更新侧边栏导航项
+            document.querySelector('[data-i18n="nav-intro"]').textContent = t.nav.intro;
+            document.querySelector('[data-i18n="nav-install"]').textContent = t.nav.install;
+            document.querySelector('[data-i18n="nav-quickstart"]').textContent = t.nav.quickstart;
+            document.querySelector('[data-i18n="nav-profiles"]').textContent = t.nav.profiles;
+            document.querySelector('[data-i18n="nav-fingerprint"]').textContent = t.nav.fingerprint;
+            document.querySelector('[data-i18n="nav-proxy"]').textContent = t.nav.proxy;
+            document.querySelector('[data-i18n="nav-cookies"]').textContent = t.nav.cookies;
+            document.querySelector('[data-i18n="nav-team"]').textContent = t.nav.team;
+            document.querySelector('[data-i18n="nav-sync"]').textContent = t.nav.sync;
+            document.querySelector('[data-i18n="nav-api"]').textContent = t.nav.api;
+            document.querySelector('[data-i18n="nav-automation"]').textContent = t.nav.automation;
+            document.querySelector('[data-i18n="nav-faq"]').textContent = t.nav.faq;
+            document.querySelector('[data-i18n="nav-troubleshooting"]').textContent = t.nav.troubleshooting;
+        }
+        
+        // 鼠标跟随光效
+        const cursorGlow = document.getElementById('cursorGlow');
+        let mouseX = 0, mouseY = 0;
+        let glowX = 0, glowY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorGlow.classList.add('active');
+        });
+        
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.classList.remove('active');
+        });
+        
+        // 平滑跟随动画
+        function animateCursorGlow() {
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateCursorGlow);
+        }
+        animateCursorGlow();
+    </script>
+</body>
+</html>
+
