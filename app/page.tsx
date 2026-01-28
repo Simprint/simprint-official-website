@@ -63,9 +63,9 @@ export default function Home() {
   }, [imagesLoaded]);
 
   return (
-    <>
+    <main>
       {/* 右上角弧线装饰 */}
-      <div className="corner-arcs">
+      <div className="corner-arcs" aria-hidden="true">
         <div className="arc"></div>
         <div className="arc"></div>
         <div className="arc"></div>
@@ -74,13 +74,13 @@ export default function Home() {
       </div>
 
       {/* 全局垂直辅助线 */}
-      <div className="rail-v left-[5%]"></div>
-      <div className="rail-v left-[50%] opacity-40"></div>
-      <div className="rail-v right-[5%]"></div>
+      <div className="rail-v left-[5%]" aria-hidden="true"></div>
+      <div className="rail-v left-[50%] opacity-40" aria-hidden="true"></div>
+      <div className="rail-v right-[5%]" aria-hidden="true"></div>
 
-      <div className="junction top-[150px] left-[5%] -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="junction top-[150px] left-[50%] -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="junction top-[150px] right-[5%] -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="junction top-[150px] left-[5%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
+      <div className="junction top-[150px] left-[50%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
+      <div className="junction top-[150px] right-[5%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
 
       {/* Hero Section */}
       <header className="relative pt-56 pb-52 overflow-hidden">
@@ -121,13 +121,25 @@ export default function Home() {
             <div className="hidden lg:block relative">
               <div className="hero-images" ref={heroImagesRef}>
                 <div className="stack-card">
-                  <img src="https://i.ibb.co/YTDtF5C8/2026-01-16-170736.png" alt="Simprint Environment" />
+                  <img
+                    src="https://i.ibb.co/YTDtF5C8/2026-01-16-170736.png"
+                    alt="Simprint anti-detect browser environment management interface showing multiple browser profiles with unique fingerprints"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="stack-card">
-                  <img src="https://i.ibb.co/DgjqTpkf/2026-01-16-170837.png" alt="Simprint Dashboard" />
+                  <img
+                    src="https://i.ibb.co/DgjqTpkf/2026-01-16-170837.png"
+                    alt="Simprint browser dashboard displaying account isolation and fingerprint configuration settings"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="stack-card">
-                  <img src="https://i.ibb.co/0VcGBbJ1/2026-01-16-174445.png" alt="Simprint Interface" />
+                  <img
+                    src="https://i.ibb.co/0VcGBbJ1/2026-01-16-174445.png"
+                    alt="Simprint browser profile interface with proxy configuration and team collaboration features"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </div>
@@ -274,6 +286,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }
