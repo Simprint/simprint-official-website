@@ -1,5 +1,7 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCursorGlow } from '@/hooks/useCursorGlow';
 
@@ -58,8 +60,15 @@ const downloadTranslations = {
 
 export default function DownloadPage() {
   const { currentLang } = useLanguage();
+  const searchParams = useSearchParams();
+
   useCursorGlow();
   const t = downloadTranslations[currentLang];
+
+  const referralCode = searchParams.get('referral_code');
+  const downloadUrl = referralCode
+    ? `/api/download/windows?referral_code=${encodeURIComponent(referralCode)}`
+    : '/api/download/windows';
 
   return (
     <>
@@ -90,7 +99,7 @@ export default function DownloadPage() {
               <p className="os-desc text-sm text-[#a3a3a3] mb-4">{t.download.windowsDesc}</p>
 
               <div className="version-tag mb-4">
-                v0.1.0 <span>{t.download.available}</span>
+                v0.1.6 <span>{t.download.available}</span>
               </div>
 
               <ul className="requirements-list">
@@ -105,10 +114,7 @@ export default function DownloadPage() {
                 </li>
               </ul>
 
-              <a
-                href="https://oss.csgot9.com/client-releases/Simprint_0.1.0_x64-setup.exe"
-                className="btn-download w-full"
-              >
+              <a href={downloadUrl} className="btn-download w-full">
                 <i data-lucide="download" className="w-4 h-4"></i>
                 {t.download.btn}
               </a>
