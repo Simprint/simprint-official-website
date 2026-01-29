@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Download Simprint',
@@ -29,10 +30,20 @@ export const metadata: Metadata = {
   },
 };
 
+function DownloadFallback() {
+  return (
+    <main className="pt-32 pb-24 relative z-10">
+      <div className="container-main">
+        <div className="text-center py-20 text-neutral-400">Loading...</div>
+      </div>
+    </main>
+  );
+}
+
 export default function DownloadLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <Suspense fallback={<DownloadFallback />}>{children}</Suspense>;
 }
