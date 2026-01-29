@@ -15,17 +15,11 @@ interface LatestJson {
   };
 }
 
+/** 可逆编码：便于客户端从文件名解析回原始推荐码再提交。使用 base64url（文件名安全）。 */
 function encodeReferral(referral: string | null): string | null {
-  if (!referral) return null;
-  const cleaned = referral.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-  if (!cleaned) return null;
-
-  let hash = 0;
-  for (let i = 0; i < cleaned.length; i += 1) {
-    hash = (hash * 31 + cleaned.charCodeAt(i)) >>> 0;
-  }
-
-  return hash.toString(36).toUpperCase();
+  if (!referral || !referral.trim()) return null;
+  const base64 = Buffer.from(referral.trim(), 'utf8').toString('base64');
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 export const dynamic = 'force-dynamic';
@@ -57,7 +51,7 @@ export async function GET(req: NextRequest) {
 
   const encoded = encodeReferral(referralCode);
 
-  // 从 r2_url 动态解析原始文件名，然后在扩展名前拼接 -{encoded_referral}
+  // 从 r2_url 动态解析原始文件名，有推荐码时在扩展名前拼接 -R_{encoded}_R 作为标志
   const urlObj = new URL(r2Url);
   const parts = urlObj.pathname.split('/');
   const originalName = parts[parts.length - 1] || 'download.exe';
@@ -69,7 +63,7 @@ export async function GET(req: NextRequest) {
 
   const fileName =
     encoded && baseName
-      ? `${baseName}-${encoded}${ext}`
+      ? `${baseName}-R_${encoded}_R${ext}`
       : originalName || 'download.exe';
 
   const fileRes = await fetch(r2Url);
