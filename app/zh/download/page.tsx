@@ -85,14 +85,10 @@ export default function DownloadPage() {
 
     try {
       window.location.href = deeplinkUrl;
+      return;
     } catch {
       window.location.href = downloadUrl;
-      return;
     }
-
-    window.setTimeout(() => {
-      window.location.href = downloadUrl;
-    }, 2000);
   };
 
   return (

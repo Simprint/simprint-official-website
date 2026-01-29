@@ -85,18 +85,14 @@ export default function DownloadPage() {
     event.preventDefault();
 
     try {
-      // 1. 优先尝试通过 deep link 拉起已安装的应用
+      // 优先尝试通过 deep link 拉起已安装的应用
       window.location.href = deeplinkUrl;
+      // 如果没有抛错，认为 deeplink 调用成功，不再做下载兜底
+      return;
     } catch {
       // 浏览器不支持或协议未注册时，直接走下载
       window.location.href = downloadUrl;
-      return;
     }
-
-    // 2. 设置兜底：若用户未安装应用，若干秒后自动回落到下载安装包
-    window.setTimeout(() => {
-      window.location.href = downloadUrl;
-    }, 2000);
   };
 
   return (
