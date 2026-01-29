@@ -70,6 +70,31 @@ export default function DownloadPage() {
     ? `/api/download/windows?referral_code=${encodeURIComponent(referralCode)}`
     : '/api/download/windows';
 
+  const deeplinkUrl = referralCode
+    ? `simprint://register?referral_code=${encodeURIComponent(referralCode)}`
+    : null;
+
+  const handleWindowsDownloadClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    if (!deeplinkUrl) {
+      return;
+    }
+
+    event.preventDefault();
+
+    try {
+      window.location.href = deeplinkUrl;
+    } catch {
+      window.location.href = downloadUrl;
+      return;
+    }
+
+    window.setTimeout(() => {
+      window.location.href = downloadUrl;
+    }, 2000);
+  };
+
   return (
     <>
       {/* 全局线条 */}
@@ -114,7 +139,11 @@ export default function DownloadPage() {
                 </li>
               </ul>
 
-              <a href={downloadUrl} className="btn-download w-full">
+              <a
+                href={downloadUrl}
+                className="btn-download w-full"
+                onClick={handleWindowsDownloadClick}
+              >
                 <i data-lucide="download" className="w-4 h-4"></i>
                 {t.download.btn}
               </a>

@@ -142,9 +142,6 @@ export default function Navigation() {
               </button>
             </div>
           </div>
-          <button className="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-[#404040] hover:bg-white hover:text-black transition-all">
-            {t.nav.console}
-          </button>
         </div>
       </div>
     </nav>

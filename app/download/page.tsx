@@ -70,6 +70,35 @@ export default function DownloadPage() {
     ? `/api/download/windows?referral_code=${encodeURIComponent(referralCode)}`
     : '/api/download/windows';
 
+  const deeplinkUrl = referralCode
+    ? `simprint://register?referral_code=${encodeURIComponent(referralCode)}`
+    : null;
+
+  const handleWindowsDownloadClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    // 没有推广参数时，保持原有直接下载行为
+    if (!deeplinkUrl) {
+      return;
+    }
+
+    event.preventDefault();
+
+    try {
+      // 1. 优先尝试通过 deep link 拉起已安装的应用
+      window.location.href = deeplinkUrl;
+    } catch {
+      // 浏览器不支持或协议未注册时，直接走下载
+      window.location.href = downloadUrl;
+      return;
+    }
+
+    // 2. 设置兜底：若用户未安装应用，若干秒后自动回落到下载安装包
+    window.setTimeout(() => {
+      window.location.href = downloadUrl;
+    }, 2000);
+  };
+
   return (
     <>
       {/* 全局线条 */}
@@ -114,7 +143,11 @@ export default function DownloadPage() {
                 </li>
               </ul>
 
-              <a href={downloadUrl} className="btn-download w-full">
+              <a
+                href={downloadUrl}
+                className="btn-download w-full"
+                onClick={handleWindowsDownloadClick}
+              >
                 <i data-lucide="download" className="w-4 h-4"></i>
                 {t.download.btn}
               </a>

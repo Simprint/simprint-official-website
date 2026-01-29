@@ -28,10 +28,18 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const referralCode = searchParams.get('referral_code');
 
-  const latestRes = await fetch(LATEST_JSON_URL, {
-    // 始终拿最新的版本信息
-    cache: 'no-store',
-  });
+  let latestRes: Response;
+  try {
+    latestRes = await fetch(LATEST_JSON_URL, {
+      // 始终拿最新的版本信息
+      cache: 'no-store',
+    });
+  } catch (error) {
+    console.error('Failed to fetch latest.json from R2:', error);
+    return new Response('Failed to fetch latest release info', {
+      status: 502,
+    });
+  }
 
   if (!latestRes.ok) {
     return new Response('Failed to fetch latest release info', {
@@ -66,7 +74,15 @@ export async function GET(req: NextRequest) {
       ? `${baseName}-R_${encoded}_R${ext}`
       : originalName || 'download.exe';
 
-  const fileRes = await fetch(r2Url);
+  let fileRes: Response;
+  try {
+    fileRes = await fetch(r2Url);
+  } catch (error) {
+    console.error('Failed to fetch installer from R2:', error);
+    return new Response('Failed to download installer', {
+      status: 502,
+    });
+  }
 
   if (!fileRes.ok || !fileRes.body) {
     return new Response('Failed to download installer', {
