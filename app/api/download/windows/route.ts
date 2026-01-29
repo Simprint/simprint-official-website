@@ -46,7 +46,6 @@ export async function GET(req: NextRequest) {
   }
 
   const latestJson = (await latestRes.json()) as LatestJson;
-  const version = latestJson.version ?? '0.0.0';
   const platformInfo = latestJson.platforms['x86_64-pc-windows-msvc'];
   const r2Url = platformInfo?.r2_url;
 
@@ -58,8 +57,20 @@ export async function GET(req: NextRequest) {
 
   const encoded = encodeReferral(referralCode);
 
-  // 方案 B：steam-setup-{encoded_referral}.exe（无版本号）
-  const fileName = encoded ? `steam-setup-${encoded}.exe` : 'steam-setup.exe';
+  // 从 r2_url 动态解析原始文件名，然后在扩展名前拼接 -{encoded_referral}
+  const urlObj = new URL(r2Url);
+  const parts = urlObj.pathname.split('/');
+  const originalName = parts[parts.length - 1] || 'download.exe';
+
+  const lastDotIndex = originalName.lastIndexOf('.');
+  const baseName =
+    lastDotIndex > 0 ? originalName.slice(0, lastDotIndex) : originalName;
+  const ext = lastDotIndex > 0 ? originalName.slice(lastDotIndex) : '';
+
+  const fileName =
+    encoded && baseName
+      ? `${baseName}-${encoded}${ext}`
+      : originalName || 'download.exe';
 
   const fileRes = await fetch(r2Url);
 
