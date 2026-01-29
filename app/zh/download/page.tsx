@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { useLanguage } from '@/hooks/useLanguage';
@@ -61,9 +62,19 @@ const downloadTranslations = {
 export default function DownloadPage() {
   const { currentLang } = useLanguage();
   const searchParams = useSearchParams();
+  const [windowsVersion, setWindowsVersion] = useState<string | null>(null);
 
   useCursorGlow();
   const t = downloadTranslations[currentLang];
+
+  useEffect(() => {
+    fetch('/api/download/windows/version')
+      .then((res) => (res.ok ? res.json() : { version: null }))
+      .then((data: { version: string | null }) =>
+        setWindowsVersion(data.version ?? null)
+      )
+      .catch(() => setWindowsVersion(null));
+  }, []);
 
   const referralCode = searchParams.get('referral_code');
   const downloadUrl = referralCode
@@ -120,7 +131,7 @@ export default function DownloadPage() {
               <p className="os-desc text-sm text-[#a3a3a3] mb-4">{t.download.windowsDesc}</p>
 
               <div className="version-tag mb-4">
-                v0.1.6 <span>{t.download.available}</span>
+                v{windowsVersion ?? '—'} <span>{t.download.available}</span>
               </div>
 
               <ul className="requirements-list">
