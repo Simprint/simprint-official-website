@@ -1,36 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Simprint
 
-## Getting Started
+简洁、现代、可靠（`简于形，安于迹`）。
 
-First, run the development server:
+Simprint 是一款反检测浏览器桌面应用，面向多账号安全管理与自动化场景：创建具有独特指纹的隔离浏览器配置文件，结合代理、团队协作与工作流能力，降低关联风险并提升运营效率。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 主要能力
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **隔离环境**：为每个账号创建独立浏览器配置文件，避免相互污染与关联
+- **指纹管理**：配置并审计浏览器指纹，提升环境稳定性与一致性
+- **代理管理**：灵活配置代理（支持批量管理与规则设置）
+- **自动化工作流**：创建与运行自动化任务，提升重复操作效率
+- **团队协作**：支持团队场景下的账号/环境管理与权限协同（规划中/持续完善）
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 文档
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 使用文档与最佳实践请参考官网文档入口（与官网保持同步更新）。
 
-## Learn More
+## 免责声明
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Simprint 旨在用于合法合规的账号与环境管理场景。使用者需遵守所在地法律法规及相关平台政策，并对自身行为承担全部责任。
