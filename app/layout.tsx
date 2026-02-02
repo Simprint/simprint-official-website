@@ -14,7 +14,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://simprint.com'),
+  metadataBase: new URL('https://www.simprint.cc'),
   title: {
     default: 'Simprint — Anti-Detect Browser for Multi-Account Management',
     template: '%s | Simprint',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     alternateLocale: ['zh_CN'],
-    url: 'https://simprint.com',
+    url: 'https://www.simprint.cc',
     siteName: 'Simprint',
     title: 'Simprint — Anti-Detect Browser for Multi-Account Management',
     description:
@@ -81,11 +81,11 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://simprint.com',
+    canonical: 'https://www.simprint.cc',
     languages: {
-      'en-US': 'https://simprint.com',
-      'zh-CN': 'https://simprint.com/zh',
-      'x-default': 'https://simprint.com',
+      'en-US': 'https://www.simprint.cc',
+      'zh-CN': 'https://www.simprint.cc/zh',
+      'x-default': 'https://www.simprint.cc',
     },
   },
   verification: {

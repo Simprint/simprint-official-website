@@ -22,17 +22,17 @@ export const metadata: Metadata = {
     title: 'Simprint — 专业反检测浏览器，多账号管理',
     description:
       '专为团队打造的专业反检测浏览器。创建独特的浏览器指纹，彻底消除账号关联风险。',
-    url: 'https://simprint.com/zh',
+    url: 'https://www.simprint.cc/zh',
     locale: 'zh_CN',
     type: 'website',
     images: ['/logo.png'],
   },
   alternates: {
-    canonical: 'https://simprint.com/zh',
+    canonical: 'https://www.simprint.cc/zh',
     languages: {
-      'en-US': 'https://simprint.com',
-      'zh-CN': 'https://simprint.com/zh',
-      'x-default': 'https://simprint.com',
+      'en-US': 'https://www.simprint.cc',
+      'zh-CN': 'https://www.simprint.cc/zh',
+      'x-default': 'https://www.simprint.cc',
     },
   },
 };

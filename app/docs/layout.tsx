@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     title: 'Simprint Documentation',
     description:
       'Complete documentation for Simprint anti-detect browser. Learn how to create browser profiles, configure fingerprints, and manage multiple accounts securely.',
-    url: 'https://simprint.com/docs',
+    url: 'https://www.simprint.cc/docs',
     type: 'website',
     images: ['/logo.png'],
   },
   alternates: {
-    canonical: 'https://simprint.com/docs',
+    canonical: 'https://www.simprint.cc/docs',
     languages: {
-      'en-US': 'https://simprint.com/docs',
-      'zh-CN': 'https://simprint.com/zh/docs',
+      'en-US': 'https://www.simprint.cc/docs',
+      'zh-CN': 'https://www.simprint.cc/zh/docs',
     },
   },
 };

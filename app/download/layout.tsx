@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     title: 'Download Simprint — Anti-Detect Browser',
     description:
       'Download Simprint anti-detect browser for Windows, macOS, and Linux. Create isolated browser profiles with unique fingerprints.',
-    url: 'https://simprint.com/download',
+    url: 'https://www.simprint.cc/download',
     type: 'website',
     images: ['/logo.png'],
   },
   alternates: {
-    canonical: 'https://simprint.com/download',
+    canonical: 'https://www.simprint.cc/download',
     languages: {
-      'en-US': 'https://simprint.com/download',
-      'zh-CN': 'https://simprint.com/zh/download',
+      'en-US': 'https://www.simprint.cc/download',
+      'zh-CN': 'https://www.simprint.cc/zh/download',
     },
   },
 };
