@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Simprint — 专业反检测浏览器，多账号管理',
   description:
-    'Simprint 是一款专为团队打造的专业反检测浏览器。为每个配置文件创建独特的浏览器指纹，彻底消除账号关联风险。适用于电商运营、广告投放和社媒管理。',
+    '专业反检测浏览器，多账号管理工具。创建独特浏览器指纹，彻底消除账号关联风险。适用于电商、广告和社媒管理。',
   keywords: [
     '反检测浏览器',
     '多账号管理',

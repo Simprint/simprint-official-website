@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: '%s | Simprint',
   },
   description:
-    'Simprint is a professional anti-detect browser built for teams. Create unique browser fingerprints for each profile and eliminate account correlation risks entirely. Perfect for e-commerce, advertising, and social media management.',
+    'Professional anti-detect browser for multi-account management. Create unique browser fingerprints and eliminate account correlation risks.',
   keywords: [
     'anti-detect browser',
     'multi-account management',
