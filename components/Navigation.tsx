@@ -41,19 +41,19 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 h-14 border-b border-[#2a2a2b] bg-[#050505]/90 backdrop-blur-md">
+    <nav className="fixed top-0 w-full z-50 h-14 border-b border-[#E5E5E5] bg-[#FFFFFF]/90 backdrop-blur-md">
       <div className="container-main h-full flex items-center justify-between">
         <div className="flex items-center gap-12">
           <LangLink href="/" className="flex items-center gap-6 hover:opacity-80 transition-opacity">
             <Image src="/logo.png" alt="Simprint" width={24} height={24} />
-            <span className="w-px h-5 bg-[#404040] rotate-12"></span>
+            <span className="w-px h-5 bg-[#CCCCCC] rotate-12"></span>
             <span className="font-bold tracking-[0.3em] text-[11px] uppercase">Simprint</span>
           </LangLink>
           <div className="hidden md:flex gap-8">
             <LangLink
               href="/docs"
               className={`text-[10px] uppercase tracking-widest transition-colors ${
-                isActive('/docs') ? 'text-white' : 'text-neutral-400 hover:text-white'
+                isActive('/docs') ? 'text-black' : 'text-neutral-500 hover:text-black'
               }`}
             >
               {t.nav.docs}
@@ -61,7 +61,7 @@ export default function Navigation() {
             <LangLink
               href="/download"
               className={`text-[10px] uppercase tracking-widest transition-colors ${
-                isActive('/download') ? 'text-white' : 'text-neutral-400 hover:text-white'
+                isActive('/download') ? 'text-black' : 'text-neutral-500 hover:text-black'
               }`}
             >
               {t.nav.download}
@@ -75,7 +75,7 @@ export default function Navigation() {
                 e.stopPropagation();
                 setDropdownOpen(!dropdownOpen);
               }}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-3 py-2 border border-[#404040] hover:border-[#606060] transition-all"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-3 py-2 border border-[#CCCCCC] hover:border-[#999999] transition-all"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@ export default function Navigation() {
               </svg>
             </button>
             <div
-              className={`absolute right-0 top-full mt-2 bg-[#0a0a0a] border border-[#404040] rounded overflow-hidden transition-all duration-200 min-w-[100px] ${
+              className={`absolute right-0 top-full mt-2 bg-[#FFFFFF] border border-[#CCCCCC] rounded overflow-hidden transition-all duration-200 min-w-[100px] ${
                 dropdownOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
               }`}
             >
@@ -117,7 +117,7 @@ export default function Navigation() {
                   e.stopPropagation();
                   switchLanguage('en');
                 }}
-                className={`lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between ${
+                className={`lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#F5F5F5] transition-colors flex items-center justify-between ${
                   currentLang === 'en' ? 'active' : ''
                 }`}
               >
@@ -131,7 +131,7 @@ export default function Navigation() {
                   e.stopPropagation();
                   switchLanguage('zh');
                 }}
-                className={`lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#1a1a1a] transition-colors flex items-center justify-between ${
+                className={`lang-option w-full px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-left hover:bg-[#F5F5F5] transition-colors flex items-center justify-between ${
                   currentLang === 'zh' ? 'active' : ''
                 }`}
               >
