@@ -3,8 +3,8 @@ export default function StructuredData() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Simprint',
-    url: 'https://www.simprint.cc',
-    logo: 'https://www.simprint.cc/logo.png',
+    url: 'https://www.simprint.app',
+    logo: 'https://www.simprint.app/logo.png',
     description:
       'Professional anti-detect browser for teams. Create unique browser fingerprints and eliminate account correlation risks.',
     sameAs: [
@@ -43,12 +43,12 @@ export default function StructuredData() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Simprint',
-    url: 'https://www.simprint.cc',
+    url: 'https://www.simprint.app',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://www.simprint.cc/search?q={search_term_string}',
+        urlTemplate: 'https://www.simprint.app/search?q={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },

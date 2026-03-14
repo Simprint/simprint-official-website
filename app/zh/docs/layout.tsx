@@ -15,16 +15,16 @@ export const metadata: Metadata = {
     title: 'Simprint 文档',
     description:
       'Simprint 反检测浏览器完整文档。学习如何创建浏览器配置文件、配置指纹，以及安全管理多个账号。',
-    url: 'https://www.simprint.cc/zh/docs',
+    url: 'https://www.simprint.app/zh/docs',
     locale: 'zh_CN',
     type: 'website',
     images: ['/logo.png'],
   },
   alternates: {
-    canonical: 'https://www.simprint.cc/zh/docs',
+    canonical: 'https://www.simprint.app/zh/docs',
     languages: {
-      'en-US': 'https://www.simprint.cc/docs',
-      'zh-CN': 'https://www.simprint.cc/zh/docs',
+      'en-US': 'https://www.simprint.app/docs',
+      'zh-CN': 'https://www.simprint.app/zh/docs',
     },
   },
 };

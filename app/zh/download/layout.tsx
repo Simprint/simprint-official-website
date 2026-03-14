@@ -18,16 +18,16 @@ export const metadata: Metadata = {
     title: '下载 Simprint — 反检测浏览器',
     description:
       '下载适用于 Windows、macOS 和 Linux 的 Simprint 反检测浏览器。创建具有独特指纹的隔离浏览器配置文件。',
-    url: 'https://www.simprint.cc/zh/download',
+    url: 'https://www.simprint.app/zh/download',
     locale: 'zh_CN',
     type: 'website',
     images: ['/logo.png'],
   },
   alternates: {
-    canonical: 'https://www.simprint.cc/zh/download',
+    canonical: 'https://www.simprint.app/zh/download',
     languages: {
-      'en-US': 'https://www.simprint.cc/download',
-      'zh-CN': 'https://www.simprint.cc/zh/download',
+      'en-US': 'https://www.simprint.app/download',
+      'zh-CN': 'https://www.simprint.app/zh/download',
     },
   },
 };
