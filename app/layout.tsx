@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Manrope, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/hooks/useLanguage';
 import GlowEffects from '@/components/GlowEffects';
@@ -8,19 +8,24 @@ import Footer from '@/components/Footer';
 import ClientScripts from '@/components/ClientScripts';
 import StructuredData from '@/components/StructuredData';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-display',
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.simprint.app'),
   title: {
-    default: 'Simprint — Anti-Detect Browser for Multi-Account Management',
+    default: 'Simprint — Fingerprint Browser for Secure Multi-Account Management',
     template: '%s | Simprint',
   },
   description:
-    'Professional anti-detect browser for multi-account management. Create unique browser fingerprints and eliminate account correlation risks.',
+    'Professional fingerprint browser for secure multi-account management. Create isolated browser profiles, control fingerprints, and reduce account correlation risks.',
   keywords: [
     'anti-detect browser',
     'multi-account management',
@@ -49,9 +54,9 @@ export const metadata: Metadata = {
     alternateLocale: ['zh_CN'],
     url: 'https://www.simprint.app',
     siteName: 'Simprint',
-    title: 'Simprint — Anti-Detect Browser for Multi-Account Management',
+    title: 'Simprint — Fingerprint Browser for Secure Multi-Account Management',
     description:
-      'Professional anti-detect browser for teams. Create unique browser fingerprints and eliminate account correlation risks. Perfect for e-commerce, advertising, and social media management.',
+      'Professional fingerprint browser for teams. Create isolated browser profiles, manage fingerprints, and reduce account correlation risks for e-commerce, advertising, and social media operations.',
     images: [
       {
         url: '/logo.png',
@@ -63,9 +68,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Simprint — Anti-Detect Browser for Multi-Account Management',
+    title: 'Simprint — Fingerprint Browser for Secure Multi-Account Management',
     description:
-      'Professional anti-detect browser for teams. Create unique browser fingerprints and eliminate account correlation risks.',
+      'Professional fingerprint browser for teams. Create isolated browser profiles, manage fingerprints, and reduce account correlation risks.',
     images: ['/logo.png'],
     creator: '@simprint',
   },
@@ -111,14 +116,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script src="https://cdn.tailwindcss.com" async></script>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
         <script src="https://unpkg.com/lucide@latest" async></script>
       </head>
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>
         <StructuredData />
         <LanguageProvider>
           <GlowEffects />

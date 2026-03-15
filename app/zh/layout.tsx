@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Simprint — 专业反检测浏览器，多账号管理',
+  title: 'Simprint — 指纹浏览器，多账号安全管理',
   description:
-    '专业反检测浏览器，多账号管理工具。创建独特浏览器指纹，彻底消除账号关联风险。适用于电商、广告和社媒管理。',
+    '专业指纹浏览器，多账号安全管理工具。支持隔离浏览器配置文件、指纹控制与代理绑定，适用于电商、广告和社媒管理。',
   keywords: [
     '反检测浏览器',
     '多账号管理',
@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     '团队协作',
   ],
   openGraph: {
-    title: 'Simprint — 专业反检测浏览器，多账号管理',
+    title: 'Simprint — 指纹浏览器，多账号安全管理',
     description:
-      '专为团队打造的专业反检测浏览器。创建独特的浏览器指纹，彻底消除账号关联风险。',
+      '专为团队打造的专业指纹浏览器。支持隔离浏览器配置文件、指纹控制与代理绑定，降低账号关联风险。',
     url: 'https://www.simprint.app/zh',
     locale: 'zh_CN',
     type: 'website',

@@ -4,11 +4,29 @@ export const translations = {
   en: {
     nav: { docs: 'Docs', download: 'Download', console: 'Console' },
     hero: {
-      badge: 'Anti-Detect Browser v4.10',
-      title: 'Multi-account<br>management, secured.',
-      desc: 'Simprint is a professional anti-detect browser built for teams. Create unique browser fingerprints for each profile and eliminate account correlation risks entirely.',
-      btn1: 'Start Free Trial',
+      badge: '',
+      title: 'Powering smarter<br>global growth.',
+      desc: 'Built for teams that need safer, more stable multi-account operations.',
+      btn1: 'Download Now',
       btn2: 'Documentation',
+      panelTitle: 'Product Overview',
+      panelDesc: 'Manage browser environments, identity settings, and team workflows in one secure workspace.',
+      proof1Label: 'Profiles isolated',
+      proof1Value: '10k+',
+      proof2Label: 'Fingerprint variables',
+      proof2Value: '100+',
+      proof3Label: 'Team-ready controls',
+      proof3Value: 'RBAC',
+    },
+    metrics: {
+      label: 'Trusted Workflow',
+      title: 'Built for teams that need stable, repeatable multi-account operations.',
+      desc: 'Simprint helps teams manage isolated browser environments, consistent identity settings, and coordinated account workflows in one place.',
+      items: [
+        { value: '99.98%', label: 'Fingerprint uniqueness' },
+        { value: '< 3 min', label: 'Profile provisioning' },
+        { value: '24/7', label: 'Operational continuity' },
+      ],
     },
     section02: {
       label: 'Account Correlation Risk',
@@ -19,6 +37,7 @@ export const translations = {
     },
     section03: {
       label: 'Core Technology',
+      title: 'Core controls for secure multi-account execution.',
       card1: {
         title: 'Fingerprint Engine',
         desc: 'Deep Chromium kernel customization. Authentic simulation of 100+ fingerprint parameters including Canvas, WebGL, Audio, and Fonts. Passes all major detection platforms.',
@@ -31,6 +50,24 @@ export const translations = {
         title: 'Team Collaboration',
         desc: 'Cloud sync and team sharing for browser profiles. Granular permission controls enable distributed teams to efficiently manage thousands of accounts together.',
       },
+    },
+    workflow: {
+      label: 'Operator Flow',
+      title: 'From provisioning to execution, the system stays legible.',
+      steps: [
+        {
+          title: 'Provision',
+          desc: 'Create isolated profiles with reproducible fingerprint presets and dedicated proxy assignments.',
+        },
+        {
+          title: 'Control',
+          desc: 'Distribute environments through team permissions, shared assets, and clear responsibility boundaries.',
+        },
+        {
+          title: 'Automate',
+          desc: 'Run repetitive tasks through workflows without collapsing environments into one detectable pattern.',
+        },
+      ],
     },
     section04: {
       label: 'Use Cases',
@@ -61,11 +98,29 @@ export const translations = {
   zh: {
     nav: { docs: '文档', download: '下载', console: '控制台' },
     hero: {
-      badge: '反检测浏览器 v4.10',
-      title: '多账号管理<br>安全无忧',
-      desc: 'Simprint 是一款专为团队打造的专业反检测浏览器。为每个配置文件创建独特的浏览器指纹，彻底消除账号关联风险。',
-      btn1: '免费试用',
+      badge: '',
+      title: '助力企业开展<br>出海业务',
+      desc: '为更安全、更稳定的多账号运营而打造。',
+      btn1: '立即下载',
       btn2: '查看文档',
+      panelTitle: '产品概览',
+      panelDesc: '在同一套安全工作区中管理浏览器环境、身份参数和团队协作流程。',
+      proof1Label: '隔离配置文件',
+      proof1Value: '10k+',
+      proof2Label: '指纹变量',
+      proof2Value: '100+',
+      proof3Label: '团队权限控制',
+      proof3Value: 'RBAC',
+    },
+    metrics: {
+      label: '可信工作流',
+      title: '为需要稳定、可重复执行的多账号运营团队而打造。',
+      desc: 'Simprint 将隔离环境、身份参数控制和团队协作整合到同一套工作流中，帮助团队更安全地管理多账号任务。',
+      items: [
+        { value: '99.98%', label: '指纹唯一性' },
+        { value: '< 3 分钟', label: '配置文件初始化' },
+        { value: '24/7', label: '持续运营能力' },
+      ],
     },
     section02: {
       label: '账号关联风险',
@@ -76,6 +131,7 @@ export const translations = {
     },
     section03: {
       label: '核心技术',
+      title: '支撑安全多账号运营的核心控制能力。',
       card1: {
         title: '指纹引擎',
         desc: '深度 Chromium 内核定制。真实模拟 100+ 指纹参数，包括 Canvas、WebGL、音频和字体。通过所有主流检测平台。',
@@ -88,6 +144,24 @@ export const translations = {
         title: '团队协作',
         desc: '浏览器配置文件的云端同步和团队共享。精细的权限控制让分布式团队能够高效地共同管理数千个账号。',
       },
+    },
+    workflow: {
+      label: '操作流程',
+      title: '从初始化到执行，整个系统都保持清晰可读。',
+      steps: [
+        {
+          title: '初始化',
+          desc: '通过可复用的指纹预设和独立代理分配，快速创建隔离配置文件。',
+        },
+        {
+          title: '控制',
+          desc: '借助团队权限、共享资产与明确责任边界，把环境安全分发给成员。',
+        },
+        {
+          title: '自动化',
+          desc: '通过工作流执行重复任务，同时避免把多个环境压缩成同一种可检测模式。',
+        },
+      ],
     },
     section04: {
       label: '应用场景',
