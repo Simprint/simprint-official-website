@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { addLangToPath, getPathWithoutLang, LANGUAGE_COOKIE_SOURCE, normalizeLanguage } from '@/lib/i18n';
 
 export default function ClientScripts() {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Lucide 图标初始化（在路由变化时重新执行一次，保证新内容中的图标也被处理）
   useEffect(() => {
@@ -12,6 +14,18 @@ export default function ClientScripts() {
       (window as any).lucide.createIcons();
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hasExplicitZhPrefix = pathname === '/zh' || pathname.startsWith('/zh/');
+    const manualCookieMatch = document.cookie.match(new RegExp(`(?:^|; )${LANGUAGE_COOKIE_SOURCE}=([^;]+)`));
+    const hasManualLanguageChoice = manualCookieMatch?.[1] === 'manual';
+    const browserLang = normalizeLanguage(navigator.language) ?? 'en';
+    if (hasExplicitZhPrefix || hasManualLanguageChoice || browserLang !== 'zh') return;
+
+    router.replace(addLangToPath(getPathWithoutLang(pathname), 'zh'));
+  }, [pathname, router]);
 
   // Reveal 动画：在每次路由变化后，重新监听当前页面中的 .reveal 元素
   useEffect(() => {

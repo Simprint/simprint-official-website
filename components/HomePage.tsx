@@ -3,7 +3,7 @@
 import LangLink from '@/components/LangLink';
 import { useCursorGlow } from '@/hooks/useCursorGlow';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 export default function HomePage() {
   const { t, currentLang } = useLanguage();
@@ -225,11 +225,12 @@ export default function HomePage() {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-[12px] font-semibold tracking-[0.16em] text-[var(--text-muted)] uppercase sm:gap-5">
-              <span>独立环境</span>
-              <span className="h-3.5 w-px bg-[rgba(108,132,170,0.28)]"></span>
-              <span>团队协作</span>
-              <span className="h-3.5 w-px bg-[rgba(108,132,170,0.28)]"></span>
-              <span>自动化</span>
+              {t.hero.tags.map((tag, index) => (
+                <Fragment key={tag}>
+                  {index > 0 ? <span className="h-3.5 w-px bg-[rgba(108,132,170,0.28)]"></span> : null}
+                  <span>{tag}</span>
+                </Fragment>
+              ))}
             </div>
 
           </div>

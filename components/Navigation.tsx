@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/hooks/useLanguage';
-import { getPathWithoutLang, addLangToPath } from '@/lib/i18n';
+import { getPathWithoutLang, addLangToPath, LANGUAGE_COOKIE, LANGUAGE_COOKIE_SOURCE } from '@/lib/i18n';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -28,6 +28,8 @@ export default function Navigation() {
 
   // 切换语言时跳转到对应路由
   const switchLanguage = (lang: 'en' | 'zh') => {
+    document.cookie = `${LANGUAGE_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${LANGUAGE_COOKIE_SOURCE}=manual; path=/; max-age=31536000; samesite=lax`;
     const pathWithoutLang = getPathWithoutLang(pathname);
     const newPath = addLangToPath(pathWithoutLang, lang);
     router.push(newPath);

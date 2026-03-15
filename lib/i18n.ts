@@ -1,5 +1,18 @@
 import { Language } from './translations';
 
+export const LANGUAGE_COOKIE = 'simprint_lang';
+export const LANGUAGE_COOKIE_SOURCE = 'simprint_lang_source';
+
+export function normalizeLanguage(value?: string | null): Language | null {
+  if (!value) return null;
+
+  const normalized = value.toLowerCase();
+  if (normalized.startsWith('zh')) return 'zh';
+  if (normalized.startsWith('en')) return 'en';
+
+  return null;
+}
+
 /**
  * 从路径中提取语言代码
  * @param pathname - 当前路径，如 '/zh/docs' 或 '/download'（英文不带前缀）

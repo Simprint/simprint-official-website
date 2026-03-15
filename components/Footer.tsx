@@ -2,7 +2,7 @@
 
 import LangLink from '@/components/LangLink';
 import { useLanguage } from '@/hooks/useLanguage';
-import { addLangToPath, getPathWithoutLang } from '@/lib/i18n';
+import { addLangToPath, getPathWithoutLang, LANGUAGE_COOKIE, LANGUAGE_COOKIE_SOURCE } from '@/lib/i18n';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -26,6 +26,8 @@ export default function Footer() {
 
   const switchLanguage = (lang: 'en' | 'zh') => {
     const pathWithoutLang = getPathWithoutLang(pathname);
+    document.cookie = `${LANGUAGE_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${LANGUAGE_COOKIE_SOURCE}=manual; path=/; max-age=31536000; samesite=lax`;
     router.push(addLangToPath(pathWithoutLang, lang));
     setDropdownOpen(false);
   };
