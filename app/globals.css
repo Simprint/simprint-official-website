@@ -468,19 +468,22 @@ body {
   padding: 0 3rem;
   position: relative;
   min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: flex-start;
 }
 
 .sidebar {
-  position: fixed;
-  top: 56px;
-  left: max(3rem, calc((100vw - 1400px) / 2 + 3rem));
+  position: sticky;
+  top: 72px;
+  left: auto;
   width: 260px;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 72px);
   background: transparent;
   border-right: 1px solid var(--rail);
   overflow-y: auto;
-  z-index: 40;
+  z-index: 10;
   padding: 2rem 0;
+  flex: 0 0 260px;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -548,10 +551,12 @@ body {
 }
 
 .main-content {
-  margin-left: 280px;
+  margin-left: 0;
   padding: 3rem 4rem;
-  max-width: calc(1400px - 280px - 6rem);
+  max-width: none;
   min-height: calc(100vh - 56px);
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .doc-section {

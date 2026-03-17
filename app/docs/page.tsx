@@ -108,6 +108,66 @@ const docsTranslations = {
         residential: 'Residential Proxies',
         mobile: 'Mobile Proxies',
       },
+      api: {
+        title: 'API Reference',
+        text1:
+          'Simprint exposes a local HTTP API after you enable API access in the client. The API is designed for local automation and tool integration.',
+        baseUrlTitle: 'Base URL',
+        baseUrlText:
+          'The local API listens on the port configured in the client. By default it binds to 127.0.0.1 unless remote access is enabled.',
+        authTitle: 'Authentication',
+        authText:
+          'Every request must include the local API key in the sp-api-key header. The key can be generated and rotated from the API & AI page.',
+        endpointsTitle: 'Available Endpoints',
+        endpoint: 'Endpoint',
+        method: 'Method',
+        description: 'Description',
+        envList: 'List environments',
+        envDetail: 'Get a single environment detail',
+        envStart: 'Start a local environment by UUID',
+        envStop: 'Stop a running local environment by UUID',
+        envBatchStart: 'Batch start environments by UUID list',
+        envBatchStop: 'Batch stop environments by UUID list',
+        envDelete: 'Delete an environment',
+        envBatchDelete: 'Batch delete environments',
+        envSetProxy: 'Set proxy for one environment',
+        envAssignTags: 'Assign tags to one environment',
+        envRemoveTag: 'Remove one tag from one environment',
+        envMoveToGroup: 'Move one environment to a group',
+        envBatchMoveToGroup: 'Batch move environments to a group',
+        envSetAccounts: 'Set accounts for one environment',
+        envBatchAssignTags: 'Batch assign tags to environments',
+        envBatchRemoveTags: 'Batch remove tags from environments',
+        envUrlsList: 'List environment URLs',
+        envUrlsAdd: 'Add one URL to an environment',
+        envUrlsDelete: 'Delete one URL from an environment',
+        envUrlsClear: 'Clear all URLs from an environment',
+        envCookiesList: 'List environment cookies',
+        envCookiesAdd: 'Add one cookie to an environment',
+        envCookiesDelete: 'Delete one cookie from an environment',
+        envCookiesClear: 'Clear all cookies from an environment',
+        envRecycleList: 'List recycle bin environments',
+        envRecycleRestore: 'Restore one environment from recycle bin',
+        envRecycleBatchRestore: 'Batch restore environments from recycle bin',
+        envRecyclePermanentDelete: 'Permanently delete one environment',
+        envRecycleBatchPermanentDelete: 'Batch permanently delete environments',
+        groupsList: 'List groups',
+        groupsDelete: 'Delete a group',
+        tagsList: 'List tags',
+        tagsDelete: 'Delete a tag',
+        proxiesList: 'List proxies',
+        proxiesDetail: 'Get a proxy detail',
+        proxiesDelete: 'Delete a proxy',
+        proxiesBatchDelete: 'Batch delete proxies',
+        proxiesBatchImport: 'Batch import proxies',
+        workspacesList: 'List workspaces',
+        workspacesGet: 'Get current workspace',
+        workspacesSwitch: 'Switch the current workspace',
+        browserKernelsList: 'List available browser kernels',
+        exampleTitle: 'Examples',
+        exampleListTitle: 'List environments',
+        exampleStartTitle: 'Start one environment',
+      },
       faq: {
         title: 'Frequently Asked Questions',
         q1: 'How many profiles can I create?',
@@ -247,7 +307,7 @@ export default function DocsPage() {
     }
   }, [currentLang]);
 
-  const t = docsTranslations[currentLang];
+  const t = docsTranslations[currentLang as keyof typeof docsTranslations] as typeof docsTranslations.en;
 
   useEffect(() => {
     const navItems = document.querySelectorAll('.nav-item');
@@ -339,6 +399,14 @@ export default function DocsPage() {
           </div>
 
           <div className="nav-category">
+            <div className="nav-category-title">{t.cat.advanced}</div>
+            <div className={`nav-item ${activeSection === 'api' ? 'active' : ''}`} data-section="api">
+              <i data-lucide="terminal-square"></i>
+              <span>{t.nav.api}</span>
+            </div>
+          </div>
+
+          <div className="nav-category">
             <div className="nav-category-title">{t.cat.support}</div>
             <div className={`nav-item ${activeSection === 'faq' ? 'active' : ''}`} data-section="faq">
               <i data-lucide="help-circle"></i>
@@ -347,7 +415,8 @@ export default function DocsPage() {
           </div>
         </aside>
 
-        <main className="main-content pt-14">
+        <main className="main-content">
+          <div className="pt-20">
           <section className="doc-section" id="introduction">
             <h1 className="doc-title">
               <i data-lucide="book-open" className="w-8 h-8"></i>
@@ -584,6 +653,266 @@ export default function DocsPage() {
             </ul>
           </section>
 
+          <section className="doc-section" id="api">
+            <h1 className="doc-title">
+              <i data-lucide="terminal-square" className="w-8 h-8"></i>
+              <span>{t.content.api.title}</span>
+            </h1>
+            <p className="doc-text">{t.content.api.text1}</p>
+
+            <h2 className="doc-subtitle">{t.content.api.baseUrlTitle}</h2>
+            <p className="doc-text">{t.content.api.baseUrlText}</p>
+            <div className="code-block">
+              <code>http://127.0.0.1:{'{port}'}/api/local</code>
+            </div>
+
+            <h2 className="doc-subtitle">{t.content.api.authTitle}</h2>
+            <p className="doc-text">{t.content.api.authText}</p>
+            <div className="code-block">
+              <code>sp-api-key: YOUR_LOCAL_API_KEY</code>
+            </div>
+
+            <h2 className="doc-subtitle">{t.content.api.endpointsTitle}</h2>
+            <table className="doc-table">
+              <thead>
+                <tr>
+                  <th>{t.content.api.method}</th>
+                  <th>{t.content.api.endpoint}</th>
+                  <th>{t.content.api.description}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-list">/environments/list</a></td>
+                  <td>{t.content.api.envList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-detail">/environments/detail</a></td>
+                  <td>{t.content.api.envDetail}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-start">/environments/start</a></td>
+                  <td>{t.content.api.envStart}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-stop">/environments/stop</a></td>
+                  <td>{t.content.api.envStop}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-start">/environments/batch-start</a></td>
+                  <td>{t.content.api.envBatchStart}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-stop">/environments/batch-stop</a></td>
+                  <td>{t.content.api.envBatchStop}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-delete">/environments/delete</a></td>
+                  <td>{t.content.api.envDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-delete">/environments/batch-delete</a></td>
+                  <td>{t.content.api.envBatchDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-set-proxy">/environments/set-proxy</a></td>
+                  <td>{t.content.api.envSetProxy}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-assign-tags">/environments/assign-tags</a></td>
+                  <td>{t.content.api.envAssignTags}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-remove-tag">/environments/remove-tag</a></td>
+                  <td>{t.content.api.envRemoveTag}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-move-to-group">/environments/move-to-group</a></td>
+                  <td>{t.content.api.envMoveToGroup}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-move-to-group">/environments/batch-move-to-group</a></td>
+                  <td>{t.content.api.envBatchMoveToGroup}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-set-accounts">/environments/set-accounts</a></td>
+                  <td>{t.content.api.envSetAccounts}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-assign-tags">/environments/batch-assign-tags</a></td>
+                  <td>{t.content.api.envBatchAssignTags}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-batch-remove-tags">/environments/batch-remove-tags</a></td>
+                  <td>{t.content.api.envBatchRemoveTags}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-urls-list">/environments/urls/list</a></td>
+                  <td>{t.content.api.envUrlsList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-urls-delete">/environments/urls/delete</a></td>
+                  <td>{t.content.api.envUrlsDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-urls-clear">/environments/urls/clear</a></td>
+                  <td>{t.content.api.envUrlsClear}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-cookies-list">/environments/cookies/list</a></td>
+                  <td>{t.content.api.envCookiesList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-cookies-delete">/environments/cookies/delete</a></td>
+                  <td>{t.content.api.envCookiesDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-cookies-clear">/environments/cookies/clear</a></td>
+                  <td>{t.content.api.envCookiesClear}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-recycle-bin-list">/environments/recycle-bin/list</a></td>
+                  <td>{t.content.api.envRecycleList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-recycle-bin-restore">/environments/recycle-bin/restore</a></td>
+                  <td>{t.content.api.envRecycleRestore}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-recycle-bin-batch-restore">/environments/recycle-bin/batch-restore</a></td>
+                  <td>{t.content.api.envRecycleBatchRestore}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-recycle-bin-permanent-delete">/environments/recycle-bin/permanent-delete</a></td>
+                  <td>{t.content.api.envRecyclePermanentDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/environments-recycle-bin-batch-permanent-delete">/environments/recycle-bin/batch-permanent-delete</a></td>
+                  <td>{t.content.api.envRecycleBatchPermanentDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/groups-list">/groups/list</a></td>
+                  <td>{t.content.api.groupsList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/groups-delete">/groups/delete</a></td>
+                  <td>{t.content.api.groupsDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/tags-list">/tags/list</a></td>
+                  <td>{t.content.api.tagsList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/tags-delete">/tags/delete</a></td>
+                  <td>{t.content.api.tagsDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/proxies-list">/proxies/list</a></td>
+                  <td>{t.content.api.proxiesList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/proxies-detail">/proxies/detail</a></td>
+                  <td>{t.content.api.proxiesDetail}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/proxies-delete">/proxies/delete</a></td>
+                  <td>{t.content.api.proxiesDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/proxies-batch-delete">/proxies/batch-delete</a></td>
+                  <td>{t.content.api.proxiesBatchDelete}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/proxies-batch-import">/proxies/batch-import</a></td>
+                  <td>{t.content.api.proxiesBatchImport}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/workspaces-list">/workspaces/list</a></td>
+                  <td>{t.content.api.workspacesList}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/workspaces-get">/workspaces/get</a></td>
+                  <td>{t.content.api.workspacesGet}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/workspaces-switch">/workspaces/switch</a></td>
+                  <td>{t.content.api.workspacesSwitch}</td>
+                </tr>
+                <tr>
+                  <td>POST</td>
+                  <td><a href="/docs/api/browser-kernels-list">/browser-kernels/list</a></td>
+                  <td>{t.content.api.browserKernelsList}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2 className="doc-subtitle">{t.content.api.exampleTitle}</h2>
+            <h3 className="doc-subtitle">{t.content.api.exampleListTitle}</h3>
+            <div className="code-block">
+              <code>
+                curl -X POST http://127.0.0.1:{'{port}'}/api/local/environments/list
+                <br />
+                {'  '} -H &quot;Content-Type: application/json&quot;
+                <br />
+                {'  '} -H &quot;sp-api-key: YOUR_LOCAL_API_KEY&quot;
+                <br />
+                {'  '} -d &#123;&quot;page&quot;:1,&quot;page_size&quot;:20&#125;
+              </code>
+            </div>
+
+            <h3 className="doc-subtitle">{t.content.api.exampleStartTitle}</h3>
+            <div className="code-block">
+              <code>
+                curl -X POST http://127.0.0.1:{'{port}'}/api/local/environments/start
+                <br />
+                {'  '} -H &quot;Content-Type: application/json&quot;
+                <br />
+                {'  '} -H &quot;sp-api-key: YOUR_LOCAL_API_KEY&quot;
+                <br />
+                {'  '} -d &#123;&quot;envUuid&quot;:&quot;YOUR_ENV_UUID&quot;&#125;
+              </code>
+            </div>
+          </section>
+
           <section className="doc-section" id="faq">
             <h1 className="doc-title">
               <i data-lucide="help-circle" className="w-8 h-8"></i>
@@ -599,6 +928,7 @@ export default function DocsPage() {
             <h2 className="doc-subtitle">{t.content.faq.q3}</h2>
             <p className="doc-text">{t.content.faq.a3}</p>
           </section>
+          </div>
         </main>
       </div>
     </>
