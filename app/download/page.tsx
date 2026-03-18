@@ -88,22 +88,50 @@ export default function DownloadPage() {
   const handleWindowsDownloadClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    // 没有推广参数时，保持原有直接下载行为
     if (!deeplinkUrl) {
       return;
     }
 
     event.preventDefault();
+    let settled = false;
 
-    try {
-      // 优先尝试通过 deep link 拉起已安装的应用
-      window.location.href = deeplinkUrl;
-      // 如果没有抛错，认为 deeplink 调用成功，不再做下载兜底
-      return;
-    } catch {
-      // 浏览器不支持或协议未注册时，直接走下载
+    const cleanup = () => {
+      window.removeEventListener('blur', handleLeavePage);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handleLeavePage);
+    };
+
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      cleanup();
+    };
+
+    const handleLeavePage = () => {
+      finish();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        finish();
+      }
+    };
+
+    window.addEventListener('blur', handleLeavePage);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handleLeavePage);
+
+    window.setTimeout(() => {
+      if (settled) {
+        return;
+      }
+      finish();
       window.location.href = downloadUrl;
-    }
+    }, 1200);
+
+    window.location.href = deeplinkUrl;
   };
 
   return (

@@ -93,13 +93,45 @@ export default function DownloadPage() {
     }
 
     event.preventDefault();
+    let settled = false;
 
-    try {
-      window.location.href = deeplinkUrl;
-      return;
-    } catch {
+    const cleanup = () => {
+      window.removeEventListener('blur', handleLeavePage);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pagehide', handleLeavePage);
+    };
+
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      cleanup();
+    };
+
+    const handleLeavePage = () => {
+      finish();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        finish();
+      }
+    };
+
+    window.addEventListener('blur', handleLeavePage);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pagehide', handleLeavePage);
+
+    window.setTimeout(() => {
+      if (settled) {
+        return;
+      }
+      finish();
       window.location.href = downloadUrl;
-    }
+    }, 1200);
+
+    window.location.href = deeplinkUrl;
   };
 
   return (
