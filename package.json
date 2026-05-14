@@ -2,6 +2,8 @@
   "name": "simprint-official-website",
   "version": "0.1.0",
   "private": true,
+  "description": "Official website, docs entry, and download portal for Simprint",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
